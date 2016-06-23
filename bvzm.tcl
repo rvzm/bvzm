@@ -26,13 +26,12 @@ proc getPass {} {
 # Main Commands
 bind pub - ${pubtrig}bvzm bvzm:main
 bind pub - ${pubtrig}pack weed:pack
+bind pub - ${pubtrig}boobies yus:boobies
 # Friendly commands
-bind pub - ${pubtrig}mvoice hub:mvoice
+bind pub f ${pubtrig}mvoice mass:voice
 bind pub f ${pubtrig}chk sym:check
-bind pub f ${pubtrig}rekt sym:rekt
 # Control Commands
 bind pub m ${controller}bvzm hub:control
-bind pub m ${controller}psa oper:psa
 bind pub m ${pubtrig}rollcall nicks:rollcall
 
 # Autos
@@ -65,6 +64,10 @@ proc create_bdb { bdb db_info } {
 }
 
 # Main Command Procs
+proc yus:boobies {nick uhost hand chan text} {
+	putserv "PRIVMSG $chan :B00BIEZ";
+	putlog "BOOBIEZ"
+}
 proc weed:pack {nick uhost hand chan text} {
 	putserv "PRIVMSG $chan \00303Pack your bowls! Chan-wide Toke-out in 1 Minute!\003"
 	global wchan
@@ -94,18 +97,8 @@ proc bvzm:main {nick uhost hand chan text} {
 	if {[lindex [split $text] 0] == "info"} {
 	  putserv "PRIVMSG $chan :bvzm.tcl - bvzm tool file ~ Coded by rvzm"; return
 	}
-	if {[lindex [split $text] 0] == "quote"} {
-		puthelp "PRIVMSG $chan :Quote Commands (<required> \[optional\])"
-		puthelp "PRIVMSG $chan :!addquote <quote> (adds a quote)"
-		puthelp "PRIVMSG $chan :!delquote <quote id> (deletes a quote)"
-		puthelp "PRIVMSG $chan :!quote \[quote id\] (gets a specific or random quote)"
-		puthelp "PRIVMSG $chan :!findquote <regexp string> (find quotes matching regexp string)"
-		puthelp "PRIVMSG $chan :!lastquote (get the last quote added to the database)"
-		puthelp "PRIVMSG $chan :!quoteauth <nick> (find quotes added by nick)"
-		puthelp "PRIVMSG $chan :!quotechan <#chan> (find quotes added in #chan)"
-	}
 }
-proc hub:mvoice {nick uhost hand chan text} {
+proc mass:voice {nick uhost hand chan text} {
   if {![matchattr $hand o|m $chan] && ![channel get $chan bvzm]} {return}
     set botnick "bvzm";
     if {[string tolower $nick] != [string tolower $botnick]} {
@@ -122,10 +115,6 @@ proc nicks:rollcall {nick uhost hand chan text} {
    set rollcall [chanlist $chan]
    putserv "PRIVMSG $chan :Roll Call!"
    putserv "PRIVMSG $chan :$rollcall"
-}
-proc sym:rekt {nick uhost hand chan text} {
-	putserv "PRIVMSG $chan :\[\u2714\] rekt";
-	return
 }
 proc sym:check {nick uhost hand chan text} {
 	putserv "PRIVMSG $chan :\[\u2714\] $text";
