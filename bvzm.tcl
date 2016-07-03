@@ -5,9 +5,6 @@
 # ### Edited: 05/31/2016        ####################
 # ### Version: 0.3              ####################
 # ##################################################
-if {[catch {source scripts/bvzm-settings.tcl} err]} {
-	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
-}
 namespace eval bvzm {
 	namespace eval gen {
 		set pubtrig "@"
