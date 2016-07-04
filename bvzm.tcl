@@ -7,47 +7,44 @@
 # ##################################################
 namespace eval bvzm {
 	namespace eval gen {
-		set pubtrig "@"
-		set controller "~"
-		set npass "placeholder"
+		variable pubtrig "@"
+		variable controller "~"
+		variable npass "placeholder"
 	}
-	namespace eval tcc {
-		set chan1 "#xhan1"
-		set chan2 "#chan2"
-		set chan3 "#chan3"
+	namespace eval dcctcsettings {
+		variable chan1 "#koaxirc"
+		variable chan2 "#blindirc"
+		variable chan3 "#uno"
 	}
-	namespace eval blob {
+	namespace eval binds {
 		# Main Commands
-		bind pub - ${bvzm::gen::pubtrig}bvzm bvzm:main
-		bind pub - ${bvzm::gen::pubtrig}boobies yus:boobies
+		bind pub - ${bvzm::gen::pubtrig}bvzm bvzm::procs::bvzm:main
+		bind pub - ${bvzm::gen::pubtrig}boobies bvzm::procs::yus:boobies
+		bind pub - ${bvzm::gen::pubtrig}pack bvzm::procs::weed:pack
 		# Friendly commands
-		bind pub f ${bvzm::gen::pubtrig}chk sym:check
-		bind pub f ${bvzm::gen::pubtrig}rollcall nicks:rollcall
-		bind pub - ${bvzm::gen::pubtrig}pack weed:pack
-		bind pub f ${bvzm::gen::pubtrig}uptime uptime:pub
+		bind pub f ${bvzm::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
+		bind pub f ${bvzm::gen::pubtrig}uptime bvzm::procs::uptime:pub
 		# Op commands
-		bind pub o ${bvzm::gen::pubtrig}mvoice hub:mvoice
+		bind pub o ${bvzm::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
 		# Control Commands
-		bind pub m ${bvzm::gen::controller}bvzm hub:control
-		# TCC Commands
-		bind dcc - tcc1 dcc:tcc1
-		bind dcc - tcc2 dcc:tcc2
-		bind dcc - tcc3 dcc:tcc3
-		bind dcc - tcchelp tcc:help
+		bind pub m ${bvzm::gen::controller}bvzm bvzm::procs::hub:control
+		# dcctc Commands
+		bind dcc - dcctc bvzm::dcctc::dcc:dcctc
 		# Autos
-		bind join - * hub:autovoice
-
+		bind join - * bvzm::procs::hub:autovoice
+	}
+	namespace eval procs {
 		# Main Command Procs
 		proc yus:boobies {nick uhost hand chan text} {
 			putserv "PRIVMSG $chan :B00BIEZ";
 			putlog "BOOBIEZ"
 		}
 		proc weed:pack {nick uhost hand chan text} {
-			if {[utimerexists floodchk] == ""} {
-				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 1 \00303Minute!\003"
+			if {[utimerexists bvzm::procs::floodchk] == ""} {
 				global wchan
 				set wchan $chan
 				if {[scan $text "%d%1s" count type] != 2} {
+					utimer 60 bvzm::procs::weed:pack:go
 					return
 				}
 				switch -- $type {
@@ -58,8 +55,9 @@ namespace eval bvzm {
 						return
 					}
 				}
-			utimer $delay weed:pack:go
-			utimer 60 floodchk
+			putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 $delay \00303seconds!\003"
+			utimer $delay bvzm::procs::weed:pack:go
+			utimer $delay bvzm::procs::floodchk
 			}
 		}
 		proc weed:pack:go {} {
@@ -102,37 +100,12 @@ namespace eval bvzm {
 			putserv "PRIVMSG $chan :Roll Call!"
 			putserv "PRIVMSG $chan :$rollcall"
 		}
-		proc sym:check {nick uhost hand chan text} {
-			putserv "PRIVMSG $chan :\[\u2714\] $text";
-			return
-		}
 		proc uptime:pub {nick host handle chan arg} {
 		global uptime
 		set uu [unixtime]
 		set tt [incr uu -$uptime]
 		puthelp "privmsg $chan : :: $nick -|- My uptime is [duration $tt]."
 		}
-		proc dcc:tcc1 {hand idc text} {
-			set chan [tcc1]
-			set v1 $text
-			putserv "PRIVMSG $chan :\[$hand @ bvzm\] $v1";
-			putlog "$chan \[$hand\] $v1"
-		}
-		proc dcc:tcc2 {hand idx text} {
-			set chan [tcc2]
-			set v1 $text
-			putserv "PRIVMSG $chan :\[$hand @ bvzm\] $v1";
-			putlog "$chan -> \[$hand\] $v1"
-			return
-		}
-		proc dcc:tcc3 {hand idx text} {
-			set chan [tcc3]
-			set v1 $text
-			putserv "PRIVMSG $chan :\[$hand @ bvzm\] $v1";
-			putlog "$chan -> \[$hand\] $v1"
-			return
-		}
-
 		# Controller command
 		proc hub:control {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
@@ -147,7 +120,7 @@ namespace eval bvzm {
 			return
 			}
 			if {$v1 == "nsauth"} {
-				putserv "NS ID [getPass]";
+				putserv "PRIVMSG NickServ ID [getPass]";
 				putserv "PRIVMSG $chan Authed to NickServ";
 				return;
 			}
@@ -175,25 +148,44 @@ namespace eval bvzm {
 			global bvzm::gen::npass
 			return $bvzm::gen::npass
 		}
-		proc tcc1 {} {
-			global bvzm::tcc::chan1
-			return $bvzm::tcc::chan1
+	}
+	# dcctc mechanism
+	namespace eval dcctc {
+		proc dcc:dcctc {hand idx text} {
+			if {[lindex [split $text] 0] == ""} { putlog "for help use \'dcctc help\'"; return }
+			set v1 [lindex [split $text] 0]
+				if {$v1 == "1"} { set chan [dcctc1] }
+				if {$v1 == "2"} { set chan [dcctc2] }
+				if {$v1 == "3"} { set chan [dcctc3] }
+				if {$v1 == "help"} {
+					putdcc $idx "Welcome to the dcctc system.";
+					putdcc $idx "To use, issue the command dcctc \[#\]";
+					putdcc $idx "where # is the channel number"
+					return
+				}
+				if {$v1 == "chanlist"} {
+					putdcc $idx "Channel List"
+					putdcc $idx "Channel 1 - [dcctc1]"
+					putdcc $idx "Channel 2 - [dcctc2]"
+					putdcc $idx "Channel 3 - [dcctc3]"
+					return
+				}
+			set v2 [string trim $text $v1]
+			putserv "PRIVMSG $chan :\[$hand @ bvzm\] $v2";
+			putlog "$chan \[$hand\] $v2"
 		}
-		proc tcc2 {} {
-			global bvzm:tcc::chan2
-			return $bvzm::tcc::chan2
+		proc dcctc1 {} {
+			global bvzm::dcctcsettings::chan1
+			return $bvzm::dcctcsettings::chan1
 		}
-		proc tcc3 {} {
-			global bvzm::tcc::chan3
-			return $bvzm::tcc::chan3
+		proc dcctc2 {} {
+			global bvzm::dcctcsettings::chan2
+			return $bvzm::dcctcsettings::chan2
 		}
-		proc tcc:help {} {
-			putlog "Welcome to TCC - Telnet->Channel Command"
-			putlog "-- Current TCC Settings --"
-			putlog "Channel 1 (tcc1) - [tcc1]"
-			putlog "Channel 2 (tcc2) - [tcc2]"
-			putlog "Channel 3 (tcc3) - [tcc3]"
+		proc dcctc3 {} {
+			global bvzm::dcctcsettings::chan3
+			return $bvzm::dcctcsettings::chan3
 		}
 	}
-		putlog "bvzm.tcl version 0.3 -- LOADED"
+	putlog "bvzm.tcl version 0.3 -- LOADED"
 }
