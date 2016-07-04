@@ -8,9 +8,9 @@ Current Features
 
 Place   | Command    | Function
 --------|------------|----------
-channel | @pack      | tells the bot top prepare the channel for a "chan-wide toke-out" - part of the weed package
-channel | @rollcall  | lists all nicks in the channel for a Roll Call
-channel | @uptime    | shows bots current uptime
-channel | @mvoice    | mass-voices the channel
-channel | @boobies   | Messages the channel "BOOBIEZ"
+channel | \@pack      | tells the bot top prepare the channel for a "chan-wide toke-out" - part of the weed package
+channel | \@rollcall  | lists all nicks in the channel for a Roll Call
+channel | \@uptime    | shows bots current uptime
+channel | \@mvoice    | mass-voices the channel
+channel | \@boobies   | Messages the channel "BOOBIEZ"
 dcc     | dcctc      | DCC-To-Channel - Send messages to predefined channels from dcc
