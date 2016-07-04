@@ -38,21 +38,24 @@ namespace eval bvzm {
 			if {[utimerexists bvzm::procs::floodchk] == ""} {
 				global wchan
 				set wchan $chan
-				if {[scan $text "%d%1s" count type] != 2} {
-					utimer 60 bvzm::procs::weed:pack:go
-					return
-				}
-				switch -- $type {
-					"s" { set delay $count }
-					"m" { set delay [expr {$count * 60}] }
-					"h" { set delay [expr {$count * 60 * 60}] }
-					default {
+				if {[lindex [split $text] 0] != ""} {
+					if {[scan $text "%d%1s" count type] != 2} {
+						putserv "PRIVMSG $chan :error - pack"
 						return
 					}
-				}
-			putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 $delay \00303seconds!\003"
-			utimer $delay bvzm::procs::weed:pack:go
-			utimer $delay bvzm::procs::floodchk
+					switch -- $type {
+						"s" { set delay $count }
+						"m" { set delay [expr {$count * 60}] }
+						"h" { set delay [expr {$count * 60 * 60}] }
+						default {
+							return
+						}
+					}
+				} else { set delay 60 }
+				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 $delay \00303seconds!\003"
+				utimer $delay bvzm::procs::weed:pack:go
+				utimer $delay bvzm::procs::floodchk
+
 			}
 		}
 		proc weed:pack:go {} {
