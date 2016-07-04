@@ -19,7 +19,6 @@ namespace eval bvzm {
 	namespace eval binds {
 		# Main Commands
 		bind pub - ${bvzm::gen::pubtrig}bvzm bvzm::procs::bvzm:main
-		bind pub - ${bvzm::gen::pubtrig}boobies bvzm::procs::yus:boobies
 		bind pub - ${bvzm::gen::pubtrig}pack bvzm::procs::weed:pack
 		# Friendly commands
 		bind pub f ${bvzm::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
@@ -35,10 +34,6 @@ namespace eval bvzm {
 	}
 	namespace eval procs {
 		# Main Command Procs
-		proc yus:boobies {nick uhost hand chan text} {
-			putserv "PRIVMSG $chan :B00BIEZ";
-			putlog "BOOBIEZ"
-		}
 		proc weed:pack {nick uhost hand chan text} {
 			if {[utimerexists bvzm::procs::floodchk] == ""} {
 				global wchan
