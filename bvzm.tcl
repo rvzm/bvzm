@@ -15,6 +15,9 @@ namespace eval bvzm {
 		setudef flag bvzm
 		setudef flag avoice
 	}
+	namespace eval tctlsettings {
+		variable dir "data"
+	}
 	namespace eval dcctcsettings {
 		variable chan1 "#chan1"
 		variable chan2 "#chan2"
@@ -24,17 +27,20 @@ namespace eval bvzm {
 		# Main Commands
 		bind pub - ${bvzm::gen::pubtrig}bvzm bvzm::procs::bvzm:main
 		bind pub - ${bvzm::gen::pubtrig}pack bvzm::procs::weed:pack
+		bind pub - ${bvzm::gen::pubtrig}greet bvzm::greet::greet:sys
 		# Friendly commands
 		bind pub f ${bvzm::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
 		bind pub f ${bvzm::gen::pubtrig}uptime bvzm::procs::hub:uptime
 		# Op commands
 		bind pub o ${bvzm::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
+		bind pub o ${bvzm::gen::pubtrig}topic bvzm::tctl::do:topic
 		# Control Commands
 		bind pub m ${bvzm::gen::controller}bvzm bvzm::procs::hub:control
 		# dcctc Commands
 		bind dcc - dcctc bvzm::dcctc::dcc:dcctc
 		# Autos
 		bind join - * bvzm::procs::hub:autovoice
+		bind join - * bvzm::greet::greet:join
 	}
 	namespace eval procs {
 		# Main Command Procs
@@ -148,6 +154,112 @@ namespace eval bvzm {
 		proc getPass {} {
 			global bvzm::gen::npass
 			return $bvzm::gen::npass
+		}
+	}
+	# Greet System
+
+	namespace eval greet {
+		setudef flag greet
+		if {![file exists gdata]} {
+			file mkdir gdata
+		}
+		# write to *.db files
+		proc write_db { w_db w_info } {
+			set fs_write [open $w_db w]
+			puts $fs_write "$w_info"
+			close $fs_write
+		}
+		# read from *.db files
+		proc read_db { r_db } {
+			set fs_open [open $r_db r]
+			gets $fs_open db_out
+			close $fs_open
+			return $db_out
+		}
+		# create *.db files, servers names files
+		proc create_db { bdb db_info } {
+			if {[file exists $bdb] == 0} {
+				set crtdb [open $bdb a+]
+				puts $crtdb "$db_info"
+				close $crtdb
+			}
+		}
+		proc greet:sys {nick uhost hand chan arg} {
+			set txt [split $arg]
+			set cmd [string tolower [lindex $txt 0]]
+			set msg [join [lrange $txt 1 end]]
+			set gdb "gdata/$nick"
+			if {$cmd == "set"} {
+				write_db $gdb $msg
+				putserv "PRIVMSG $chan :Greet for $nick set";
+			}
+		}
+		proc greet:join {nick uhost hand chan} {
+			if {![channel get $chan greet]} {return}
+			if {[file exists gdata/$nick]} { putserv "PRIVMSG $chan :\[$nick\] - [read_db gdata/$nick]"}
+		}
+	}
+	# topic controller mechanism
+	namespace eval tctl {
+		if {![file exists $bvzm::tctlsettings::dir]} {
+			file mkdir $bvzm::tctlsettings::dir
+		}
+		# write to *.db files
+		proc write_db { w_db w_info } {
+			set fs_write [open $w_db w]
+			puts $fs_write "$w_info"
+			close $fs_write
+		}
+		# read from *.db files
+		proc read_db { r_db } {
+			set fs_open [open $r_db r]
+			gets $fs_open db_out
+			close $fs_open
+			return $db_out
+		}
+		# create *.db files, servers names files
+		proc create_db { bdb db_info } {
+			if {[file exists $bdb] == 0} {
+				set crtdb [open $bdb a+]
+				puts $crtdb "$db_info"
+				close $crtdb
+			}
+		}
+		setudef flag tctl
+		proc do:topic {nick uhost hand chan arg} {
+			if {![channel get $chan tctl]} {return}
+			if {![file exists "$bvzm::tctlsettings::dir/$chan"]} { file mkdir $bvzm::tctlsettings::dir/$chan }
+			set cdir "$bvzm::tctlsettings::dir/$chan"
+			global ctlchan top1 top2 top3
+			set top1 "$cdir/top1.db"
+			set top2 "$cdir/top2.db"
+			set top3 "$cdir/top3.db"
+			create_db $top1 "null"
+			create_db $top2 "null"
+			create_db $top3 "null"
+			set txt [split $arg]
+			set cmd [string tolower [lindex $txt 0]]
+			set msg [join [lrange $txt 1 end]]
+			set ctlchan $chan
+			if {$cmd == "t1"} {
+				write_db $top1 $msg
+				change_topic
+			}
+			if {$cmd == "t2"} {
+			write_db $top1 $msg
+			change_topic
+			}
+			if {$cmd == "t3"} {
+				write_db $top3 $msg
+				change_topic
+			}
+		}
+		proc change_topic { } {
+			global ctlchan top1 top2 top3
+			set top1 [read_db $top1]
+			set top2 [read_db $top2]
+			set top3 [read_db $top3]
+			putquick "TOPIC $ctlchan :$top1 | $top2 | $top3"
 		}
 	}
 	# dcctc mechanism
