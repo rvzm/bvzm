@@ -2,19 +2,23 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Edited: 05/31/2016        ####################
 # ### Version: 0.3              ####################
 # ##################################################
+
 namespace eval bvzm {
 	namespace eval gen {
 		variable pubtrig "@"
 		variable controller "~"
 		variable npass "placeholder"
 	}
+	namespace eval flags {
+		setudef flag bvzm
+		setudef flag avoice
+	}
 	namespace eval dcctcsettings {
-		variable chan1 "#koaxirc"
-		variable chan2 "#blindirc"
-		variable chan3 "#uno"
+		variable chan1 "#chan1"
+		variable chan2 "#chan2"
+		variable chan3 "#chan3"
 	}
 	namespace eval binds {
 		# Main Commands
@@ -22,7 +26,7 @@ namespace eval bvzm {
 		bind pub - ${bvzm::gen::pubtrig}pack bvzm::procs::weed:pack
 		# Friendly commands
 		bind pub f ${bvzm::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
-		bind pub f ${bvzm::gen::pubtrig}uptime bvzm::procs::uptime:pub
+		bind pub f ${bvzm::gen::pubtrig}uptime bvzm::procs::hub:uptime
 		# Op commands
 		bind pub o ${bvzm::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
 		# Control Commands
@@ -55,7 +59,6 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 $delay \00303seconds!\003"
 				utimer $delay bvzm::procs::weed:pack:go
 				utimer $delay bvzm::procs::floodchk
-
 			}
 		}
 		proc weed:pack:go {} {
@@ -98,11 +101,11 @@ namespace eval bvzm {
 			putserv "PRIVMSG $chan :Roll Call!"
 			putserv "PRIVMSG $chan :$rollcall"
 		}
-		proc uptime:pub {nick host handle chan arg} {
-		global uptime
-		set uu [unixtime]
-		set tt [incr uu -$uptime]
-		puthelp "privmsg $chan : :: $nick -|- My uptime is [duration $tt]."
+		proc hub:uptime {nick host handle chan arg} {
+			global uptime
+			set uu [unixtime]
+			set tt [incr uu -$uptime]
+			puthelp "privmsg $chan : :: $nick - My uptime is [duration $tt]."
 		}
 		# Controller command
 		proc hub:control {nick uhost hand chan text} {
@@ -157,7 +160,7 @@ namespace eval bvzm {
 				if {$v1 == "3"} { set chan [dcctc3] }
 				if {$v1 == "help"} {
 					putdcc $idx "Welcome to the dcctc system.";
-					putdcc $idx "To use, issue the command dcctc \[#\]";
+					putdcc $idx "To use, issue the command 'dcctc \[#\] <text>'";
 					putdcc $idx "where # is the channel number"
 					return
 				}
