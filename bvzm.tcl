@@ -2,27 +2,12 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3              ####################
+# ### Version: 0.3.2            ####################
 # ##################################################
-
+if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
+	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
+}
 namespace eval bvzm {
-	namespace eval gen {
-		variable pubtrig "@"
-		variable controller "~"
-		variable npass "placeholder"
-	}
-	namespace eval flags {
-		setudef flag bvzm
-		setudef flag avoice
-	}
-	namespace eval tctlsettings {
-		variable dir "data"
-	}
-	namespace eval dcctcsettings {
-		variable chan1 "#chan1"
-		variable chan2 "#chan2"
-		variable chan3 "#chan3"
-	}
 	namespace eval binds {
 		# Main Commands
 		bind pub - ${bvzm::gen::pubtrig}bvzm bvzm::procs::bvzm:main
@@ -127,8 +112,8 @@ namespace eval bvzm {
 			return
 			}
 			if {$v1 == "nsauth"} {
-				putserv "PRIVMSG NickServ ID [getPass]";
-				putserv "PRIVMSG $chan Authed to NickServ";
+				putserv "PRIVMSG NickServ :ID [getPass]";
+				putserv "PRIVMSG $chan :Authed to NickServ";
 				return;
 			}
 			if {$v1 == "config"} {
@@ -159,7 +144,6 @@ namespace eval bvzm {
 	# Greet System
 
 	namespace eval greet {
-		setudef flag greet
 		if {![file exists gdata]} {
 			file mkdir gdata
 		}
@@ -225,7 +209,6 @@ namespace eval bvzm {
 				close $crtdb
 			}
 		}
-		setudef flag tctl
 		proc do:topic {nick uhost hand chan arg} {
 			if {![channel get $chan tctl]} {return}
 			if {![file exists "$bvzm::tctlsettings::dir/$chan"]} { file mkdir $bvzm::tctlsettings::dir/$chan }
