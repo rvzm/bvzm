@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3.2            ####################
+# ### Version: 0.3.3            ####################
 # ##################################################
 if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
@@ -144,8 +144,8 @@ namespace eval bvzm {
 	# Greet System
 
 	namespace eval greet {
-		if {![file exists gdata]} {
-			file mkdir gdata
+		if {![file exists $bvzm::dirset::greet]} {
+			file mkdir $bvzm::dirset::greet
 		}
 		# write to *.db files
 		proc write_db { w_db w_info } {
@@ -172,7 +172,7 @@ namespace eval bvzm {
 			set txt [split $arg]
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [join [lrange $txt 1 end]]
-			set gdb "gdata/$nick"
+			set gdb "$bvzm::dirset::greet/$nick"
 			if {$cmd == "set"} {
 				write_db $gdb $msg
 				putserv "PRIVMSG $chan :Greet for $nick set";
@@ -180,13 +180,13 @@ namespace eval bvzm {
 		}
 		proc greet:join {nick uhost hand chan} {
 			if {![channel get $chan greet]} {return}
-			if {[file exists gdata/$nick]} { putserv "PRIVMSG $chan :\[$nick\] - [read_db gdata/$nick]"}
+			if {[file exists gdata/$nick]} { putserv "PRIVMSG $chan :\[$nick\] - [read_db $bvzm::dirset::greet/$nick]"}
 		}
 	}
 	# topic controller mechanism
 	namespace eval tctl {
-		if {![file exists $bvzm::tctlsettings::dir]} {
-			file mkdir $bvzm::tctlsettings::dir
+		if {![file exists $bvzm::dirset::tctl]} {
+			file mkdir $bvzm::dirset::tctl
 		}
 		# write to *.db files
 		proc write_db { w_db w_info } {
@@ -211,8 +211,8 @@ namespace eval bvzm {
 		}
 		proc do:topic {nick uhost hand chan arg} {
 			if {![channel get $chan tctl]} {return}
-			if {![file exists "$bvzm::tctlsettings::dir/$chan"]} { file mkdir $bvzm::tctlsettings::dir/$chan }
-			set cdir "$bvzm::tctlsettings::dir/$chan"
+			if {![file exists "$bvzm::dirset::tctl/$chan"]} { file mkdir $bvzm::dirset::tctl/$chan }
+			set cdir "$bvzm::dirset::tctl/$chan"
 			global ctlchan top1 top2 top3
 			set top1 "$cdir/top1.db"
 			set top2 "$cdir/top2.db"
@@ -248,27 +248,30 @@ namespace eval bvzm {
 	# dcctc mechanism
 	namespace eval dcctc {
 		proc dcc:dcctc {hand idx text} {
-			if {[lindex [split $text] 0] == ""} { putlog "for help use \'dcctc help\'"; return }
-			set v1 [lindex [split $text] 0]
-				if {$v1 == "1"} { set chan [dcctc1] }
-				if {$v1 == "2"} { set chan [dcctc2] }
-				if {$v1 == "3"} { set chan [dcctc3] }
-				if {$v1 == "help"} {
-					putdcc $idx "Welcome to the dcctc system.";
-					putdcc $idx "To use, issue the command 'dcctc \[#\] <text>'";
-					putdcc $idx "where # is the channel number"
-					return
-				}
-				if {$v1 == "chanlist"} {
-					putdcc $idx "Channel List"
-					putdcc $idx "Channel 1 - [dcctc1]"
-					putdcc $idx "Channel 2 - [dcctc2]"
-					putdcc $idx "Channel 3 - [dcctc3]"
-					return
-				}
-			set v2 [string trim $text $v1]
-			putserv "PRIVMSG $chan :\[$hand @ bvzm\] $v2";
-			putlog "$chan \[$hand\] $v2"
+			if {$bvzm::dcctcsettings::mode == "0"} { putdcc $idx "dcctc is currently disabled"; return }
+			if {$bvzm::dcctcsettings::mode == "1"} {
+				if {[lindex [split $text] 0] == ""} { putlog "for help use \'dcctc help\'"; return }
+				set v1 [lindex [split $text] 0]
+					if {$v1 == "1"} { set chan [dcctc1] }
+					if {$v1 == "2"} { set chan [dcctc2] }
+					if {$v1 == "3"} { set chan [dcctc3] }
+					if {$v1 == "help"} {
+						putdcc $idx "Welcome to the dcctc system.";
+						putdcc $idx "To use, issue the command 'dcctc \[#\] <text>'";
+						putdcc $idx "where # is the channel number"
+						return
+					}
+					if {$v1 == "chanlist"} {
+						putdcc $idx "Channel List"
+						putdcc $idx "Channel 1 - [dcctc1]"
+						putdcc $idx "Channel 2 - [dcctc2]"
+						putdcc $idx "Channel 3 - [dcctc3]"
+						return
+					} else { putdcc $idx "Error - invalid dcctc command/options"; return }
+				set v2 [string trim $text $v1]
+				putserv "PRIVMSG $chan :\[$hand @ bvzm\] $v2";
+				putlog "$chan \[$hand\] $v2"
+			} else { putdcc $idx "Error - Invalid dcctc mode option" }
 		}
 		proc dcctc1 {} {
 			global bvzm::dcctcsettings::chan1
@@ -283,5 +286,5 @@ namespace eval bvzm {
 			return $bvzm::dcctcsettings::chan3
 		}
 	}
-	putlog "bvzm.tcl version 0.3 -- LOADED"
+	putlog "bvzm.tcl version 0.3.3 -- LOADED"
 }
