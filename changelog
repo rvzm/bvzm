@@ -1,0 +1,7 @@
+# changelog for bvzm.tcl
+
+v0.3.4
+ - changed TopicControl to TCS (Topic Control System)
+ - changes dcctc to dccts
+ - Updated dcctc to have 5 channels
+ - minor changes to settings file

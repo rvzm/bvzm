@@ -2,27 +2,27 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3.3            ####################
+# ### Version: 0.3.4            ####################
 # ##################################################
-if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
-	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
+if {[catch {source scripts/bvzm-settings.tcl} err]} {
+	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
 }
 namespace eval bvzm {
 	namespace eval binds {
 		# Main Commands
-		bind pub - ${bvzm::gen::pubtrig}bvzm bvzm::procs::bvzm:main
-		bind pub - ${bvzm::gen::pubtrig}pack bvzm::procs::weed:pack
-		bind pub - ${bvzm::gen::pubtrig}greet bvzm::greet::greet:sys
+		bind pub - ${bvzm::settings::gen::pubtrig}bvzm bvzm::procs::bvzm:main
+		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::procs::weed:pack
+		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::greet:sys
 		# Friendly commands
-		bind pub f ${bvzm::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
-		bind pub f ${bvzm::gen::pubtrig}uptime bvzm::procs::hub:uptime
+		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
+		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::hub:uptime
 		# Op commands
-		bind pub o ${bvzm::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
-		bind pub o ${bvzm::gen::pubtrig}topic bvzm::tctl::do:topic
+		bind pub o ${bvzm::settings::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
+		bind pub o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
 		# Control Commands
-		bind pub m ${bvzm::gen::controller}bvzm bvzm::procs::hub:control
+		bind pub m ${bvzm::settings::gen::controller}bvzm bvzm::procs::hub:control
 		# dcctc Commands
-		bind dcc - dcctc bvzm::dcctc::dcc:dcctc
+		bind dcc - dccts bvzm::dccts::go
 		# Autos
 		bind join - * bvzm::procs::hub:autovoice
 		bind join - * bvzm::greet::greet:join
@@ -46,7 +46,7 @@ namespace eval bvzm {
 							return
 						}
 					}
-				} else { set delay 60 }
+				} else { set delay $bvzm::settings::weed::packdefault }
 				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 $delay \00303seconds!\003"
 				utimer $delay bvzm::procs::weed:pack:go
 				utimer $delay bvzm::procs::floodchk
@@ -71,7 +71,7 @@ namespace eval bvzm {
 				puthelp "PRIVMSG $chan :bvzm commands: info";
 			}
 			if {[lindex [split $text] 0] == "info"} {
-				putserv "PRIVMSG $chan :bvzm.tcl - bvzm tool file ~ Coded by rvzm"; return
+				putserv "PRIVMSG $chan :bvzm.tcl (version $bvzm::settings::version) - bvzm tool file ~ Coded by rvzm"; return
 			}
 		}
 		proc hub:mvoice {nick uhost hand chan text} {
@@ -142,7 +142,6 @@ namespace eval bvzm {
 		}
 	}
 	# Greet System
-
 	namespace eval greet {
 		if {![file exists $bvzm::dirset::greet]} {
 			file mkdir $bvzm::dirset::greet
@@ -180,13 +179,13 @@ namespace eval bvzm {
 		}
 		proc greet:join {nick uhost hand chan} {
 			if {![channel get $chan greet]} {return}
-			if {[file exists gdata/$nick]} { putserv "PRIVMSG $chan :\[$nick\] - [read_db $bvzm::dirset::greet/$nick]"}
+			if {[file exists $bvzm::settings::dir::greet/$nick]} { putserv "PRIVMSG $chan :\[$nick\] - [read_db $bvzm::settings::dir::greet/$nick]"}
 		}
 	}
 	# topic controller mechanism
-	namespace eval tctl {
-		if {![file exists $bvzm::dirset::tctl]} {
-			file mkdir $bvzm::dirset::tctl
+	namespace eval tcs {
+		if {![file exists $bvzm::settings::dir::tcs]} {
+			file mkdir $bvzm::settings::dir::tcs
 		}
 		# write to *.db files
 		proc write_db { w_db w_info } {
@@ -210,9 +209,9 @@ namespace eval bvzm {
 			}
 		}
 		proc do:topic {nick uhost hand chan arg} {
-			if {![channel get $chan tctl]} {return}
-			if {![file exists "$bvzm::dirset::tctl/$chan"]} { file mkdir $bvzm::dirset::tctl/$chan }
-			set cdir "$bvzm::dirset::tctl/$chan"
+			if {![channel get $chan tcs]} {return}
+			if {![file exists "$bvzm::settings::dir::tcs/$chan"]} { file mkdir $bvzm::settings::dir::tcs/$chan }
+			set cdir "$bvzm::settings::dir::tcs/$chan"
 			global ctlchan top1 top2 top3
 			set top1 "$cdir/top1.db"
 			set top2 "$cdir/top2.db"
@@ -229,7 +228,7 @@ namespace eval bvzm {
 				change_topic
 			}
 			if {$cmd == "t2"} {
-			write_db $top1 $msg
+			write_db $top2 $msg
 			change_topic
 			}
 			if {$cmd == "t3"} {
@@ -245,46 +244,59 @@ namespace eval bvzm {
 			putquick "TOPIC $ctlchan :$top1 | $top2 | $top3"
 		}
 	}
-	# dcctc mechanism
-	namespace eval dcctc {
-		proc dcc:dcctc {hand idx text} {
-			if {$bvzm::dcctcsettings::mode == "0"} { putdcc $idx "dcctc is currently disabled"; return }
-			if {$bvzm::dcctcsettings::mode == "1"} {
+	# dccts mechanism
+	namespace eval dccts {
+		proc go {hand idx text} {
+			if {$bvzm::settings::dccts::mode == "0"} { putdcc $idx "dcctc is currently disabled"; return }
+			if {$bvzm::settings::dccts::mode == "1"} {
 				if {[lindex [split $text] 0] == ""} { putlog "for help use \'dcctc help\'"; return }
 				set v1 [lindex [split $text] 0]
-					if {$v1 == "1"} { set chan [dcctc1] }
-					if {$v1 == "2"} { set chan [dcctc2] }
-					if {$v1 == "3"} { set chan [dcctc3] }
+					if {$v1 == "1"} { set chan [dccts1] }
+					if {$v1 == "2"} { set chan [dccts2] }
+					if {$v1 == "3"} { set chan [dccts3] }
+					if {$v1 == "4"} { set chan [dccts4] }
+					if {$v1 == "5"} { set chan [dccts5] }
 					if {$v1 == "help"} {
 						putdcc $idx "Welcome to the dcctc system.";
-						putdcc $idx "To use, issue the command 'dcctc \[#\] <text>'";
+						putdcc $idx "To use, issue the command 'dccts \[#\] <text>'"
 						putdcc $idx "where # is the channel number"
+						putdcc $idx "For Channel list, use 'dccts chanlist'"
 						return
 					}
 					if {$v1 == "chanlist"} {
 						putdcc $idx "Channel List"
-						putdcc $idx "Channel 1 - [dcctc1]"
-						putdcc $idx "Channel 2 - [dcctc2]"
-						putdcc $idx "Channel 3 - [dcctc3]"
+						putdcc $idx "Channel 1 - [dccts1]"
+						putdcc $idx "Channel 2 - [dccts2]"
+						putdcc $idx "Channel 3 - [dccts3]"
+						putdcc $idx "Channel 4 - [dccts4]"
+						putdcc $idx "Channel 5 - [dccts5]"
 						return
-					} else { putdcc $idx "Error - invalid dcctc command/options"; return }
+					}
 				set v2 [string trim $text $v1]
 				putserv "PRIVMSG $chan :\[$hand @ bvzm\] $v2";
 				putlog "$chan \[$hand\] $v2"
 			} else { putdcc $idx "Error - Invalid dcctc mode option" }
 		}
-		proc dcctc1 {} {
-			global bvzm::dcctcsettings::chan1
-			return $bvzm::dcctcsettings::chan1
+		proc dccts1 {} {
+			global bvzm::settings::dccts::chan1
+			return $bvzm::settings::dccts::chan1
 		}
-		proc dcctc2 {} {
-			global bvzm::dcctcsettings::chan2
-			return $bvzm::dcctcsettings::chan2
+		proc dccts2 {} {
+			global bvzm::settings::dccts::chan2
+			return $bvzm::settings::dccts::chan2
 		}
-		proc dcctc3 {} {
-			global bvzm::dcctcsettings::chan3
-			return $bvzm::dcctcsettings::chan3
+		proc dccts3 {} {
+			global bvzm::settings::dccts::chan3
+			return $bvzm::settings::dccts::chan3
+		}
+		proc dccts4 {} {
+			global bvzm::settings::dccts::chan4
+			return $bvzm::settings::dccts::chan4
+		}
+		proc dccts5 {} {
+			global bvzm::settings::dccts::chan5
+			return $bvzm::settings::dccts::chan5
 		}
 	}
-	putlog "bvzm.tcl version 0.3.3 -- LOADED"
+	putlog "bvzm.tcl version $bvzm::settings::version -- LOADED"
 }
