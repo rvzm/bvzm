@@ -1,5 +1,10 @@
 # changelog for bvzm.tcl
 
+v0.3.5
+ - added to weed package: pipe, bong, joint
+ - modified tcs to check if a topic section already exists
+ - fixed a bug in tcs that looked for the wrong setting
+
 v0.3.4
  - changed TopicControl to TCS (Topic Control System)
  - changes dcctc to dccts
