@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3.4            ####################
+# ### Version: 0.3.5            ####################
 # ##################################################
 if {[catch {source scripts/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
@@ -11,8 +11,12 @@ namespace eval bvzm {
 	namespace eval binds {
 		# Main Commands
 		bind pub - ${bvzm::settings::gen::pubtrig}bvzm bvzm::procs::bvzm:main
-		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::procs::weed:pack
 		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::greet:sys
+		# weed package
+		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
+		bind pub - ${bvzm::settings::gen::pubtrig}bong bvzm::weed::bong
+		bind pub - ${bvzm::settings::gen::pubtrig}pipe bvzm::weed::pipe
+		bind pub - ${bvzm::settings::gen::pubtrig}joint bvzm::weed::joint
 		# Friendly commands
 		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
 		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::hub:uptime
@@ -21,7 +25,7 @@ namespace eval bvzm {
 		bind pub o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
 		# Control Commands
 		bind pub m ${bvzm::settings::gen::controller}bvzm bvzm::procs::hub:control
-		# dcctc Commands
+		# DCC Commands
 		bind dcc - dccts bvzm::dccts::go
 		# Autos
 		bind join - * bvzm::procs::hub:autovoice
@@ -29,38 +33,6 @@ namespace eval bvzm {
 	}
 	namespace eval procs {
 		# Main Command Procs
-		proc weed:pack {nick uhost hand chan text} {
-			if {[utimerexists bvzm::procs::floodchk] == ""} {
-				global wchan
-				set wchan $chan
-				if {[lindex [split $text] 0] != ""} {
-					if {[scan $text "%d%1s" count type] != 2} {
-						putserv "PRIVMSG $chan :error - pack"
-						return
-					}
-					switch -- $type {
-						"s" { set delay $count }
-						"m" { set delay [expr {$count * 60}] }
-						"h" { set delay [expr {$count * 60 * 60}] }
-						default {
-							return
-						}
-					}
-				} else { set delay $bvzm::settings::weed::packdefault }
-				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 $delay \00303seconds!\003"
-				utimer $delay bvzm::procs::weed:pack:go
-				utimer $delay bvzm::procs::floodchk
-			}
-		}
-		proc weed:pack:go {} {
-			global wchan
-			putserv "PRIVMSG $wchan :\00303::\003045\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003044\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003043\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003042\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003041\00303:";
-			putserv "PRIVMSG $wchan :\00303::\00311\002SYNCRONIZED!\002 \00304FIRE THEM BOWLS UP!!!"; return
-		}
 		proc bvzm:main {nick uhost hand chan text} {
 			global botnick
 			if {[lindex [split $text] 0] == ""} {
@@ -141,6 +113,59 @@ namespace eval bvzm {
 			return $bvzm::gen::npass
 		}
 	}
+	# weed package
+	namespace eval weed {
+		proc pack {nick uhost hand chan text} {
+			if {[utimerexists bvzm::procs::floodchk] == ""} {
+				global wchan
+				set wchan $chan
+				if {[lindex [split $text] 0] != ""} {
+					if {[scan $text "%d%1s" count type] != 2} {
+						putserv "PRIVMSG $chan :error - pack"
+						return
+					}
+					switch -- $type {
+						"s" { set delay $count }
+						"m" { set delay [expr {$count * 60}] }
+						"h" { set delay [expr {$count * 60 * 60}] }
+						default {
+							return
+						}
+					}
+				} else { set delay $bvzm::settings::weed::packdefault }
+				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 $delay \00303seconds!\003"
+				utimer $delay bvzm::::weed::pack:go
+				utimer $delay bvzm::procs::floodchk
+			}
+		}
+		proc pack:go {} {
+			global wchan
+			putserv "PRIVMSG $wchan :\00303::\003045\00303:";
+			putserv "PRIVMSG $wchan :\00303::\003044\00303:";
+			putserv "PRIVMSG $wchan :\00303::\003043\00303:";
+			putserv "PRIVMSG $wchan :\00303::\003042\00303:";
+			putserv "PRIVMSG $wchan :\00303::\003041\00303:";
+			putserv "PRIVMSG $wchan :\00303::\00311\002SYNCRONIZED!\002 \00304FIRE THEM BOWLS UP!!!"; return
+		}
+		proc bong {nick uhost hand chan text} {
+			set v1 [lindex [split $text] 0]
+			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION passes the bong to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION passes the bong to $v1\01"}
+			putserv "PRIVMSG $chan :Hit that shit and pass bitch!"
+			return
+		}
+		proc pipe {nick uhost hand chan text} {
+			set v1 [lindex [split $text] 0]
+			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION passes the pipe to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION passes the pipe to $v1\01"}
+			putserv "PRIVMSG $chan :Hit that shit and pass bitch!"
+			return
+		}
+		proc joint {nick uhost hand chan text} {
+		set v1 [lindex [split $text] 0]
+			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION rolls a joint and passes to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION rolls a joint and passes to $v1\01"}
+			putserv "PRIVMSG $chan :Hit that shit and pass bitch!"
+			return
+		}
+	}
 	# Greet System
 	namespace eval greet {
 		if {![file exists $bvzm::dirset::greet]} {
@@ -216,9 +241,9 @@ namespace eval bvzm {
 			set top1 "$cdir/top1.db"
 			set top2 "$cdir/top2.db"
 			set top3 "$cdir/top3.db"
-			create_db $top1 "null"
-			create_db $top2 "null"
-			create_db $top3 "null"
+			if {[read_db top1] == ""} { create_db $top1 "null" }
+			if {[read_db top2] == ""} { create_db $top2 "null" }
+			if {[read_db top3] == ""} { create_db $top3 "null" }
 			set txt [split $arg]
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [join [lrange $txt 1 end]]
