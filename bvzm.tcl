@@ -101,6 +101,29 @@ namespace eval bvzm {
 			}
 		}
 		# Utility procs
+	}
+	namespace eval util {
+		# write to *.db files
+		proc write_db { w_db w_info } {
+			set fs_write [open $w_db w]
+			puts $fs_write "$w_info"
+			close $fs_write
+		}
+		# read from *.db files
+		proc read_db { r_db } {
+			set fs_open [open $r_db r]
+			gets $fs_open db_out
+			close $fs_open
+			return $db_out
+		}
+		# create *.db files, servers names files
+		proc create_db { bdb db_info } {
+			if {[file exists $bdb] == 0} {
+				set crtdb [open $bdb a+]
+				puts $crtdb "$db_info"
+				close $crtdb
+			}
+		}
 		proc floodchk {} {
 			return
 		}
@@ -116,7 +139,7 @@ namespace eval bvzm {
 	# weed package
 	namespace eval weed {
 		proc pack {nick uhost hand chan text} {
-			if {[utimerexists bvzm::procs::floodchk] == ""} {
+			if {[utimerexists bvzm::util::floodchk] == ""} {
 				global wchan
 				set wchan $chan
 				if {[lindex [split $text] 0] != ""} {
@@ -134,8 +157,8 @@ namespace eval bvzm {
 					}
 				} else { set delay $bvzm::settings::weed::packdefault }
 				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00308 $delay \00303seconds!\003"
-				utimer $delay bvzm::::weed::pack:go
-				utimer $delay bvzm::procs::floodchk
+				utimer $delay bvzm::weed::pack:go
+				utimer $delay bvzm::util::floodchk
 			}
 		}
 		proc pack:go {} {
@@ -171,40 +194,19 @@ namespace eval bvzm {
 		if {![file exists $bvzm::dirset::greet]} {
 			file mkdir $bvzm::dirset::greet
 		}
-		# write to *.db files
-		proc write_db { w_db w_info } {
-			set fs_write [open $w_db w]
-			puts $fs_write "$w_info"
-			close $fs_write
-		}
-		# read from *.db files
-		proc read_db { r_db } {
-			set fs_open [open $r_db r]
-			gets $fs_open db_out
-			close $fs_open
-			return $db_out
-		}
-		# create *.db files, servers names files
-		proc create_db { bdb db_info } {
-			if {[file exists $bdb] == 0} {
-				set crtdb [open $bdb a+]
-				puts $crtdb "$db_info"
-				close $crtdb
-			}
-		}
 		proc greet:sys {nick uhost hand chan arg} {
 			set txt [split $arg]
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [join [lrange $txt 1 end]]
 			set gdb "$bvzm::dirset::greet/$nick"
 			if {$cmd == "set"} {
-				write_db $gdb $msg
+				bvzm::util::write_db $gdb $msg
 				putserv "PRIVMSG $chan :Greet for $nick set";
 			}
 		}
 		proc greet:join {nick uhost hand chan} {
 			if {![channel get $chan greet]} {return}
-			if {[file exists $bvzm::settings::dir::greet/$nick]} { putserv "PRIVMSG $chan :\[$nick\] - [read_db $bvzm::settings::dir::greet/$nick]"}
+			if {[file exists $bvzm::settings::dir::greet/$nick]} { putserv "PRIVMSG $chan :\[$nick\] - [bvzm::util::read_db $bvzm::settings::dir::greet/$nick]"}
 		}
 	}
 	# topic controller mechanism
@@ -212,27 +214,7 @@ namespace eval bvzm {
 		if {![file exists $bvzm::settings::dir::tcs]} {
 			file mkdir $bvzm::settings::dir::tcs
 		}
-		# write to *.db files
-		proc write_db { w_db w_info } {
-			set fs_write [open $w_db w]
-			puts $fs_write "$w_info"
-			close $fs_write
-		}
-		# read from *.db files
-		proc read_db { r_db } {
-			set fs_open [open $r_db r]
-			gets $fs_open db_out
-			close $fs_open
-			return $db_out
-		}
-		# create *.db files, servers names files
-		proc create_db { bdb db_info } {
-			if {[file exists $bdb] == 0} {
-				set crtdb [open $bdb a+]
-				puts $crtdb "$db_info"
-				close $crtdb
-			}
-		}
+
 		proc do:topic {nick uhost hand chan arg} {
 			if {![channel get $chan tcs]} {return}
 			if {![file exists "$bvzm::settings::dir::tcs/$chan"]} { file mkdir $bvzm::settings::dir::tcs/$chan }
@@ -241,31 +223,31 @@ namespace eval bvzm {
 			set top1 "$cdir/top1.db"
 			set top2 "$cdir/top2.db"
 			set top3 "$cdir/top3.db"
-			if {[read_db top1] == ""} { create_db $top1 "null" }
-			if {[read_db top2] == ""} { create_db $top2 "null" }
-			if {[read_db top3] == ""} { create_db $top3 "null" }
+			bvzm::util::create_db $top1 "null"
+			bvzm::util::create_db $top2 "null"
+			bvzm::util::create_db $top3 "null"
 			set txt [split $arg]
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [join [lrange $txt 1 end]]
 			set ctlchan $chan
 			if {$cmd == "t1"} {
-				write_db $top1 $msg
+				bvzm::util::write_db $top1 $msg
 				change_topic
 			}
 			if {$cmd == "t2"} {
-			write_db $top2 $msg
+			bvzm::util::write_db $top2 $msg
 			change_topic
 			}
 			if {$cmd == "t3"} {
-				write_db $top3 $msg
+				bvzm::util::write_db $top3 $msg
 				change_topic
 			}
 		}
 		proc change_topic { } {
 			global ctlchan top1 top2 top3
-			set top1 [read_db $top1]
-			set top2 [read_db $top2]
-			set top3 [read_db $top3]
+			set top1 [bvzm::util::read_db $top1]
+			set top2 [bvzm::util::read_db $top2]
+			set top3 [bvzm::util::read_db $top3]
 			putquick "TOPIC $ctlchan :$top1 | $top2 | $top3"
 		}
 	}
