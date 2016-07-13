@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3.6            ####################
+# ### Version: 0.3.7            ####################
 # ##################################################
 if {[catch {source scripts/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
@@ -13,6 +13,7 @@ namespace eval bvzm {
 		bind pub - ${bvzm::settings::gen::pubtrig}bvzm bvzm::procs::bvzm:main
 		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::greet:sys
 		bind pub - ${bvzm::settings::gen::pubtrig}regme bvzm::procs::register
+		bind pub - ${bvzm::settings::gen::pubtrig}fchk bvzm::procs::flagcheck
 		# weed package
 		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
 		bind pub - ${bvzm::settings::gen::pubtrig}bong bvzm::weed::bong
@@ -23,6 +24,7 @@ namespace eval bvzm {
 		# Friendly commands
 		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
 		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::hub:uptime
+		bind pub f ${bvzm::settings::gen::pubtrig}bitchslap bvzm::procs::bitchslap
 		# Op commands
 		bind pub -|o ${bvzm::settings::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
 		bind pub -|o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
@@ -68,6 +70,12 @@ namespace eval bvzm {
 			putserv "PRIVMSG $chan :Roll Call!"
 			putserv "PRIVMSG $chan :$rollcall"
 		}
+		proc bitchslap {nick uhost hand chan text} {
+			set v1 [lindex [split $text] 0]
+			if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return }
+			putserv "PRIVMSG $chan :\01ACTION slaps the fuck out of $v1\01"
+			return
+		}
 		proc hub:uptime {nick host hand chan arg} {
 			global uptime
 			set uu [unixtime]
@@ -77,10 +85,21 @@ namespace eval bvzm {
 		proc register {nick uhost hand chan text} {
 			if {[validuser $nick] == "1"} { putserv "PRIVMSG $chan :Sorry $nick, but you're already registered. :)"; return }
 			if {[adduser $nick $uhost] == "1"} {
-				putserv "PRIVMSG [bvzm::util::homechan] :*** Adding user - $nick / $uhost";
-				putserv "PRIVMSG [bvzm::util::homechan] :*** User Addition successful - $nick / $uhost"
+				putserv "PRIVMSG [bvzm::util::homechan] :*** Introduced user - $nick / $uhost"
+				putlog "*** Introduced to user - $nick / $uhost"
 				putserv "PRIVMSG $chan :Congradulations, $nick! you are now in my system! yay :)"
 				} else { putserv "PRIVMSG $chan :Addition failed." }
+			return
+		}
+		proc flagcheck {nick uhost hand chan text} {
+			if {[validuser $nick] == "0"} { putserv "PRIVMSG $chan :Error - you're not in my userfile. use [bvzm::util::getTrigger]regme to register"; return }
+			if {[matchattr $nick f] == "1"} { set chkf friend } else { set chkf normal }
+			if {[matchattr $nick o] == "1"} { set chkf $chkf,globop }
+			if {[matchattr $nick p] == "1"} { set chkf $chkf,partyline }
+			if {[matchattr $nick t] == "1"} { set chkf $chkf,botnet }
+			if {[matchattr $nick m] == "1"} { set chkf $chkf,master }
+			if {[matchattr $nick n] == "1"} { set chkf $chkf,owner }
+			putserv "PRIVMSG $chan :$nick your flags are $chkf"
 			return
 		}
 		# Controller command
@@ -103,7 +122,7 @@ namespace eval bvzm {
 				return;
 			}
 			if {$v1 == "rehash"} { rehash; putserv "PRIVMSG $chan :Rehashing configuration file"; return }
-			if {$v1 == register} { putserv "PRIVMSG NickServ :REGISTER [bvzm::util::getPass] [bvzm::util::getEmail]"}
+			if {$v1 == "register"} { putserv "PRIVMSG NickServ :REGISTER [bvzm::util::getPass] [bvzm::util::getEmail]"}
 		}
 		# Autos procs
 		proc hub:autovoice {nick host hand chan} {
@@ -193,24 +212,28 @@ namespace eval bvzm {
 		}
 		proc bong {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
+			if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return }
 			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION passes the bong to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION passes the bong to $v1\01"}
 			putserv "PRIVMSG $chan :Lets make some bubbles!"
 			return
 		}
 		proc pipe {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
+			if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return }
 			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION passes the pipe to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION passes the pipe to $v1\01"}
 			putserv "PRIVMSG $chan :Ride the Dragon bro!"
 			return
 		}
 		proc joint {nick uhost hand chan text} {
-		set v1 [lindex [split $text] 0]
+			set v1 [lindex [split $text] 0]
+			if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return }
 			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION rolls a joint and passes to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION rolls a joint and passes to $v1\01"}
 			putserv "PRIVMSG $chan :Puff Puff Pass!"
 			return
 		}
 		proc dab {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
+			if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return }
 			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION readies the nail and hands the rig to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION readies the nail and hands the rig to $v1\01"}
 			putserv "PRIVMSG $chan :Take a dab broski!"
 			return
