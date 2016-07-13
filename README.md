@@ -1,4 +1,4 @@
-# bvzm.tcl \- version 0.3.7
+# bvzm.tcl \- version 0.3.8
 
 ## Basic Information
 This script is ran and tested with [eggdrop](http://eggheads.org) 1.6.21, and requires
@@ -23,10 +23,21 @@ anyone  | greet      | using 'greet set' will set your greet - this does not go 
 anyone  | bvzm       | this command by itself shows an error message
  -->    | - help     | shows help information about bvzm.tcl - currently only the bvzm command
  -->    | - info     | shows information about bvzm.tcl to the channel
- anyone | fchk       | check your flags with the bot
+anyone  | fchk       | check your flags with the bot
 friends | rollcall   | lists all nicks in the channel for a Roll Call
 friends | uptime     | shows bots current uptime
 chanop  | mvoice     | mass-voices the channel
+--------|------------|-----------
+
+## Controller
+The controller (set via settings->gen->controller)
+
+master  | bvzm       | bvzm controller - use the settings->gen->controller prefix for this command
+-->     | restart    | restart the bot
+-->     | die        | kill the bot :(
+-->     | nsauth     | have the bot authenticate itself to NickServ - change the settings->gen->npass value to what you wish the bot to use
+-->     | register   | have the bot register itself with NickServ - change settings->gen->npass and settings->gen->email to the desired values
+-->     | rehash     | rehash the bot
 
 ## DCC Commands
 package  | Command   | Function
