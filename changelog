@@ -1,5 +1,8 @@
 # changelog for bvzm.tcl
 
+v0.3.8
+ - minor changes
+
 v0.3.7
  - added command: bitchslap - slap someone! :D
  - added command: fchk - check your flags

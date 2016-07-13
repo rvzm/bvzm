@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3.7            ####################
+# ### Version: 0.3.8            ####################
 # ##################################################
 if {[catch {source scripts/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
