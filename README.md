@@ -21,8 +21,8 @@ anyone  | weed       | show info about the weed package
 anyone  | regme      | Registers you into the userfile, if you arent already in it.
 anyone  | greet      | using 'greet set' will set your greet - this does not go by userfile handles
 anyone  | bvzm       | this command by itself shows an error message
- -->    | |- help    | shows help information about bvzm.tcl - currently only the bvzm command
- -->    | |- info    | shows information about bvzm.tcl to the channel
+ -->    | - help    | shows help information about bvzm.tcl - currently only the bvzm command
+ -->    | - info    | shows information about bvzm.tcl to the channel
 friends | rollcall   | lists all nicks in the channel for a Roll Call
 friends | uptime     | shows bots current uptime
 chanop  | mvoice     | mass-voices the channel
