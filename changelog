@@ -1,5 +1,11 @@
 # changelog for bvzm.tcl
 
+v0.3.7
+ - added command: bitchslap - slap someone! :D
+ - added command: fchk - check your flags
+ - added command: regme - register yourself with the bot
+ - updated weed package commands (except pack) to check if the user you specify is on the channel
+
 v0.3.6
  - added a public registration command
  - added commands to the weed package - dab, and weed
