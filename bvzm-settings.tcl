@@ -1,10 +1,12 @@
 namespace eval bvzm {
 	namespace eval settings {
-		variable version "0.3.5"
+		variable version "0.3.6"
 		namespace eval gen {
 			variable pubtrig "@"
 			variable controller "~"
 			variable npass "placeholder"
+			variable email "placeholder@example.com"
+			variable homechan "#home"
 		}
 		namespace eval dccts {
 			variable mode "1"

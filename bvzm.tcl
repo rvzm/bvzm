@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3.5            ####################
+# ### Version: 0.3.6            ####################
 # ##################################################
 if {[catch {source scripts/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
@@ -12,19 +12,23 @@ namespace eval bvzm {
 		# Main Commands
 		bind pub - ${bvzm::settings::gen::pubtrig}bvzm bvzm::procs::bvzm:main
 		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::greet:sys
+		bind pub - ${bvzm::settings::gen::pubtrig}regme bvzm::procs::register
 		# weed package
 		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
 		bind pub - ${bvzm::settings::gen::pubtrig}bong bvzm::weed::bong
 		bind pub - ${bvzm::settings::gen::pubtrig}pipe bvzm::weed::pipe
 		bind pub - ${bvzm::settings::gen::pubtrig}joint bvzm::weed::joint
+		bind pub - ${bvzm::settings::gen::pubtrig}dab bvzm::weed::dab
+		bind pub - ${bvzm::settings::gen::pubtrig}weed bvzm::weed::info
 		# Friendly commands
 		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
 		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::hub:uptime
 		# Op commands
-		bind pub o ${bvzm::settings::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
-		bind pub o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
+		bind pub -|o ${bvzm::settings::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
+		bind pub -|o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
 		# Control Commands
 		bind pub m ${bvzm::settings::gen::controller}bvzm bvzm::procs::hub:control
+		# In-development commands
 		# DCC Commands
 		bind dcc - dccts bvzm::dccts::go
 		# Autos
@@ -64,17 +68,27 @@ namespace eval bvzm {
 			putserv "PRIVMSG $chan :Roll Call!"
 			putserv "PRIVMSG $chan :$rollcall"
 		}
-		proc hub:uptime {nick host handle chan arg} {
+		proc hub:uptime {nick host hand chan arg} {
 			global uptime
 			set uu [unixtime]
 			set tt [incr uu -$uptime]
 			puthelp "privmsg $chan : :: $nick - My uptime is [duration $tt]."
+		}
+		proc register {nick uhost hand chan text} {
+			if {[validuser $nick] == "1"} { putserv "PRIVMSG $chan :Sorry $nick, but you're already registered. :)"; return }
+			if {[adduser $nick $uhost] == "1"} {
+				putserv "PRIVMSG [bvzm::util::homechan] :*** Adding user - $nick / $uhost";
+				putserv "PRIVMSG [bvzm::util::homechan] :*** User Addition successful - $nick / $uhost"
+				putserv "PRIVMSG $chan :Congradulations, $nick! you are now in my system! yay :)"
+				} else { putserv "PRIVMSG $chan :Addition failed." }
+			return
 		}
 		# Controller command
 		proc hub:control {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
 			set v2 [lindex [split $text] 1]
 			putcmdlog "*** bvzm controller - $nick has issued a command: $text"
+			putserv "PRIVMSG [bvzm::util::homechan] :*** bvzm controller - $nick has issued a command: $text"
 			if {$v1 == "restart"} {
 				restart;
 				return
@@ -84,13 +98,12 @@ namespace eval bvzm {
 			return
 			}
 			if {$v1 == "nsauth"} {
-				putserv "PRIVMSG NickServ :ID [getPass]";
+				putserv "PRIVMSG NickServ :ID [bvzm::util::getPass]";
 				putserv "PRIVMSG $chan :Authed to NickServ";
 				return;
 			}
-			if {$v1 == "config"} {
-				if {$v2 == "reload"} { rehash; putserv "PRIVMSG $chan :Reloading Configuration File."; return }
-			}
+			if {$v1 == "rehash"} { rehash; putserv "PRIVMSG $chan :Rehashing configuration file"; return }
+			if {$v1 == register} { putserv "PRIVMSG NickServ :REGISTER [bvzm::util::getPass] [bvzm::util::getEmail]"}
 		}
 		# Autos procs
 		proc hub:autovoice {nick host hand chan} {
@@ -128,12 +141,20 @@ namespace eval bvzm {
 			return
 		}
 		proc getTrigger {} {
-			global bvzm::gen::pubtrig
-			return $bvzm::gen::pubtrig
+			global bvzm::settings::gen::pubtrig
+			return $bvzm::settings::gen::pubtrig
 		}
 		proc getPass {} {
-			global bvzm::gen::npass
-			return $bvzm::gen::npass
+			global bvzm::settings::gen::npass
+			return $bvzm::settings::gen::npass
+		}
+		proc getEmail {} {
+			global bvzm::settings::gen::email
+			return $bvzm::settings::gen::email
+		}
+		proc homechan {} {
+			global bvzm::settings::gen::homechan
+			return $bvzm::settings::gen::homechan
 		}
 	}
 	# weed package
@@ -173,26 +194,39 @@ namespace eval bvzm {
 		proc bong {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
 			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION passes the bong to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION passes the bong to $v1\01"}
-			putserv "PRIVMSG $chan :Hit that shit and pass bitch!"
+			putserv "PRIVMSG $chan :Lets make some bubbles!"
 			return
 		}
 		proc pipe {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
 			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION passes the pipe to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION passes the pipe to $v1\01"}
-			putserv "PRIVMSG $chan :Hit that shit and pass bitch!"
+			putserv "PRIVMSG $chan :Ride the Dragon bro!"
 			return
 		}
 		proc joint {nick uhost hand chan text} {
 		set v1 [lindex [split $text] 0]
 			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION rolls a joint and passes to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION rolls a joint and passes to $v1\01"}
-			putserv "PRIVMSG $chan :Hit that shit and pass bitch!"
+			putserv "PRIVMSG $chan :Puff Puff Pass!"
 			return
+		}
+		proc dab {nick uhost hand chan text} {
+			set v1 [lindex [split $text] 0]
+			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION readies the nail and hands the rig to $nick\01" } else { putserv "PRIVMSG $chan :\01ACTION readies the nail and hands the rig to $v1\01"}
+			putserv "PRIVMSG $chan :Take a dab broski!"
+			return
+		}
+		proc info {nick uhost hand chan text} {
+			set v1 [lindex [split $text] 0]
+			if {$v1 == ""} {
+				putserv "PRIVMSG $chan :welcome to the bvzm weed package."
+				putserv "PRIVMSG $chan :weed package ideas came from both LayneStaley and rvzm | code by rvzm | dab option brought to you by LayneStaley"
+			}
 		}
 	}
 	# Greet System
 	namespace eval greet {
-		if {![file exists $bvzm::dirset::greet]} {
-			file mkdir $bvzm::dirset::greet
+		if {![file exists $bvzm::settings::dir::greet]} {
+			file mkdir $bvzm::settings::dir::greet
 		}
 		proc greet:sys {nick uhost hand chan arg} {
 			set txt [split $arg]

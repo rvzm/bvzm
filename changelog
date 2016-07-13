@@ -1,5 +1,11 @@
 # changelog for bvzm.tcl
 
+v0.3.6
+ - added a public registration command
+ - added commands to the weed package - dab, and weed
+ - added homechan, where controller messages go.
+ - switched channel op commands to actually be chanop
+
 v0.3.5
  - added to weed package: pipe, bong, joint
  - modified tcs to check if a topic section already exists
