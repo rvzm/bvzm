@@ -37,6 +37,7 @@ anyone  | weed       | show info about the weed package
 
 ## Controller
 The controller (set via settings->gen->controller)
+
 Who     | Command    | Function
 --------|------------|-------------
 master  | bvzm       | bvzm controller - use the settings->gen->controller prefix for this command
