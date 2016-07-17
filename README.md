@@ -4,9 +4,6 @@
 This script is ran and tested with [eggdrop](http://eggheads.org) 1.6.21, and requires
 no extra packages to be installed.
 
-## NOTICE
-soon this script will be switched to being tested on eggdrop 1.8
-
 Currently, bvzm.tcl features a few commands, as well as a few options for automated channel management.
 
 ## Channel commands
