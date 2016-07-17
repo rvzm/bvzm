@@ -18,7 +18,7 @@ anyone  | slap         | slap someone with a random object from the slapdata fil
 anyone  | bitchslap    | slap someone with a Banzai item, specified via the file set in settings->file->slapbanzai
 anyone  | bvzm         | this command by itself shows an error message
  -->    | - help       | shows help information about bvzm.tcl - currently only the bvzm command
- -----> | -- /command/ | show command help for a specified command
+ -->    | -- /command/ | show command help for a specified command
  -->    | - info       | shows information about bvzm.tcl to the channel
  -->    | - commands   | show a list of commands
 anyone  | fchk         | check your flags with the bot
@@ -26,7 +26,6 @@ friends | rollcall     | lists all nicks in the channel for a Roll Call
 friends | uptime       | shows bots current uptime
 friends | addslap      | add an object to slap people with via the slap command
 chanop  | mvoice       | mass-voices the channel
---------|--------------|-----------
 
 ## Weed package commands
 Who     | Command    | Function
