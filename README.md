@@ -16,7 +16,7 @@ anyone  | regme        | Registers you into the userfile, if you arent already i
 anyone  | greet        | using 'greet set' will set your greet - this does not go by userfile handles
 anyone  | bvzm         | this command by itself shows an error message
  -->    | - help       | shows help information about bvzm.tcl - currently only the bvzm command
- -----> | -- <command> | show command help for <command>
+ -----> | -- /command/ | show command help for a specified command
  -->    | - info       | shows information about bvzm.tcl to the channel
  -->    | - commands   | show a list of commands
 anyone  | fchk         | check your flags with the bot
