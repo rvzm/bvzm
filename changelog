@@ -1,5 +1,10 @@
 # changelog for bvzm.tcl
 
+v0.4
+ - added slap command
+ - added addslap command (friend flag required)
+ - modified bitchslap command - now like slap, but with banzai!
+
 v0.3.9
  - added help section for commands, 'bvzm commands'
  - can now trigger help for each command using 'bvzm help <command>'

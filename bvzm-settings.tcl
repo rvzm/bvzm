@@ -23,6 +23,10 @@ namespace eval bvzm {
 			variable greet "gdata"
 			variable tcs "data"
 		}
+		namespace eval file {
+			variable slapdata "slapdata/slaps.txt"
+			variable slapbanzai "slapdata/banzai.txt"
+		}
 		namespace eval flags {
 			setudef flag bvzm
 			setudef flag avoice

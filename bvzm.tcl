@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3.9            ####################
+# ### Version: 0.4              ####################
 # ##################################################
 if {[catch {source scripts/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
@@ -14,7 +14,9 @@ namespace eval bvzm {
 		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::greet:sys
 		bind pub - ${bvzm::settings::gen::pubtrig}regme bvzm::procs::register
 		bind pub - ${bvzm::settings::gen::pubtrig}fchk bvzm::procs::flagcheck
-		# weed package
+		bind pub - ${bvzm::settings::gen::pubtrig}slap bvzm::procs::slap
+		bind pub - ${bvzm::settings::gen::pubtrig}bitchslap bvzm::procs::bitchslap
+		# weed commands
 		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
 		bind pub - ${bvzm::settings::gen::pubtrig}bong bvzm::weed::bong
 		bind pub - ${bvzm::settings::gen::pubtrig}pipe bvzm::weed::pipe
@@ -24,7 +26,7 @@ namespace eval bvzm {
 		# Friendly commands
 		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
 		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::hub:uptime
-		bind pub f ${bvzm::settings::gen::pubtrig}bitchslap bvzm::procs::bitchslap
+		bind pub f ${bvzm::settings::gen::pubtrig}addslap bvzm::procs::addslap
 		# Op commands
 		bind pub -|o ${bvzm::settings::gen::pubtrig}mvoice bvzm::procs::hub:mvoice
 		bind pub -|o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
@@ -60,7 +62,7 @@ namespace eval bvzm {
 				if {$v2 == "bitchslap"} {putserv "PRIVMSG $chan :command help for 'bitchslap' - options: <nickname> | reqs: friend flag | slaps the given nickname"; return }
 				if {$v2 == "mvoice"} { putserv "PRIVMSG $chan :command help for 'mvoice' - reqs: chanop flag | mass-voices the channel"; return }
 				if {$v2 == "topic"} { putserv "PRIVMSG $chan :command help for 'topic' - options: t<1|2|3> <text> | reqs: chanop flag | set the topic section for t<num> to <text>"; return }
-				# weed package
+				# weed commands
 				if {$v2 == "pack"} { putserv "PRIVMSG $chan :command help for 'pack' - options: \[duration\] | pack a bowl, optionally you may specify how long to wait"; return }
 				if {$v2 == "bong"} { putserv "PRIVMSG $chan :command help for 'bong' - options: \[nick\] | pack a bong and pass it to either yourself or someone else"; return }
 				if {$v2 == "pipe"} { putserv "PRIVMSG $chan :command help for 'pipe' - options: \[nick\] | pack a pipe and pass it to either yourself or someone else"; return }
@@ -99,7 +101,27 @@ namespace eval bvzm {
 		proc bitchslap {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
 			if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return }
-			putserv "PRIVMSG $chan :\01ACTION slaps the fuck out of $v1\01"
+			set bslappy "slaps $v1 with [bvzm::util::getSlapBanzai]"
+			putserv "PRIVMSG $chan \01ACTION $bslappy\01"
+			return
+		}
+		proc slap {nick uhost hand chan text} {
+			set v1 [lindex [split $text] 0]
+			if {$v1 == ""} { putserv "PRIVMSG $chan \01ACTION slaps the shit out of $nick \01"; putserv "PRIVMSG $chan :thats what you get for not saying who! :P"; return }
+			if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return }
+			set slappy "slaps $v1 with [bvzm::util::getSlap]"
+			putserv "PRIVMSG $chan \01ACTION $slappy\01"
+			return
+		}
+		proc addslap {nick uhost hand chan text} {
+			global bvzm::settings::file::slapdata
+			set v1 [lindex [split $text] 0]
+			if {$v1 == ""} { putserv "PRIVMSG $chan :Please specify a slap item"; return}
+			set file [open $bvzm::settings::file::slapdata a]
+			set data $text
+			puts -nonewline $file $data
+			close $file
+			putserv "PRIVMSG $chan :slap item added - $text"
 			return
 		}
 		proc hub:uptime {nick host hand chan arg} {
@@ -200,6 +222,23 @@ namespace eval bvzm {
 		proc homechan {} {
 			global bvzm::settings::gen::homechan
 			return $bvzm::settings::gen::homechan
+		}
+		proc act {chan text} { putserv "PRIVMSG $chan \01ACTION $text\01"; }
+		proc getSlap {} {
+			global bvzm::settings::file::slapdata
+			set file [open $bvzm::settings::file::slapdata r]
+			set slap [read -nonewline $file]
+			close $file
+			set slap [split $slap \n]
+			return [lindex $slap [rand [llength $slap]]]
+		}
+		proc getSlapBanzai {} {
+			global bvzm::settings::file::slapbanzai
+			set file [open $bvzm::settings::file::slapbanzai r]
+			set slap [read -nonewline $file]
+			close $file
+			set slap [split $slap \n]
+			return [lindex $slap [rand [llength $slap]]]
 		}
 	}
 	# weed package

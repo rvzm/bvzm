@@ -1,4 +1,4 @@
-# bvzm.tcl \- version 0.3.9
+# bvzm.tcl \- version 0.4
 
 ## Basic Information
 This script is ran and tested with [eggdrop](http://eggheads.org) 1.6.21, and requires
@@ -14,6 +14,8 @@ Who     | Command      | Function
 --------|--------------|----------
 anyone  | regme        | Registers you into the userfile, if you arent already in it.
 anyone  | greet        | using 'greet set' will set your greet - this does not go by userfile handles
+anyone  | slap         | slap someone with a random object from the slapdata file, specified via settings->file->slapdata
+anyone  | bitchslap    | slap someone with a Banzai item, specified via the file set in settings->file->slapbanzai
 anyone  | bvzm         | this command by itself shows an error message
  -->    | - help       | shows help information about bvzm.tcl - currently only the bvzm command
  -----> | -- /command/ | show command help for a specified command
@@ -22,6 +24,7 @@ anyone  | bvzm         | this command by itself shows an error message
 anyone  | fchk         | check your flags with the bot
 friends | rollcall     | lists all nicks in the channel for a Roll Call
 friends | uptime       | shows bots current uptime
+friends | addslap      | add an object to slap people with via the slap command
 chanop  | mvoice       | mass-voices the channel
 --------|--------------|-----------
 
