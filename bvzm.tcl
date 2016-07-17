@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.3.8            ####################
+# ### Version: 0.3.9            ####################
 # ##################################################
 if {[catch {source scripts/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
@@ -40,16 +40,42 @@ namespace eval bvzm {
 	namespace eval procs {
 		# Main Command Procs
 		proc bvzm:main {nick uhost hand chan text} {
-			global botnick
-			if {[lindex [split $text] 0] == ""} {
-				puthelp "PRIVMSG $chan :\037ERROR\037: Incorrect Parameters. \037SYNTAX\037: [getTrigger]bvzm help"; return
+			set v1 [lindex [split $text] 0]
+			set v2 [lindex [split $text] 1]
+			set v3 [lindex [split $text] 2]
+			if {$v1 == ""} {
+				puthelp "PRIVMSG $chan :\037ERROR\037: Incorrect Parameters. \037SYNTAX\037: [bvzm::util::getTrigger]bvzm help"; return
 			}
-			if {[lindex [split $text] 0] == "help"} {
-				puthelp "PRIVMSG $chan :\002Public Cmds\002: bvzm commands use [getTrigger]";
-				puthelp "PRIVMSG $chan :bvzm commands: info";
-			}
-			if {[lindex [split $text] 0] == "info"} {
+			if {$v1 == "help"} {
+				if {$v2 == ""} {
+					puthelp "PRIVMSG $chan :\002Public Cmds\002: bvzm commands use [bvzm::util::getTrigger]";
+					puthelp "PRIVMSG $chan :bvzm commands: info commands | use '[bvzm::util::getTrigger]bvzm help <command>' for help with that command";
+					return
+					}
+				if {$v2 == "regme"} { putserv "PRIVMSG $chan :command help for 'regme' - this command will register you into my userfile. this allows for extra flags, such as friend, chanop, ect."; return }
+				if {$v2 == "greet"} { putserv "PRIVMSG $chan :command help for 'greet' - options: set <greet> | set your greet"; return }
+				if {$v2 == "fchk"} { putserv "PRIVMSG $chan :command help for 'fchk' - check what flags you have, or if you are registered with me"; return }
+				if {$v2 == "rollcall"} { putserv "PRIVMSG $chan :command help for 'rollcall' - reqs: friend flag | does a roll call, listing all nicks in channel"; return }
+				if {$v2 == "uptime"} { putserv "PRIVMSG $chan :command help for 'uptime' - reqs: friend flag | displays my current uptime"; return }
+				if {$v2 == "bitchslap"} {putserv "PRIVMSG $chan :command help for 'bitchslap' - options: <nickname> | reqs: friend flag | slaps the given nickname"; return }
+				if {$v2 == "mvoice"} { putserv "PRIVMSG $chan :command help for 'mvoice' - reqs: chanop flag | mass-voices the channel"; return }
+				if {$v2 == "topic"} { putserv "PRIVMSG $chan :command help for 'topic' - options: t<1|2|3> <text> | reqs: chanop flag | set the topic section for t<num> to <text>"; return }
+				# weed package
+				if {$v2 == "pack"} { putserv "PRIVMSG $chan :command help for 'pack' - options: \[duration\] | pack a bowl, optionally you may specify how long to wait"; return }
+				if {$v2 == "bong"} { putserv "PRIVMSG $chan :command help for 'bong' - options: \[nick\] | pack a bong and pass it to either yourself or someone else"; return }
+				if {$v2 == "pipe"} { putserv "PRIVMSG $chan :command help for 'pipe' - options: \[nick\] | pack a pipe and pass it to either yourself or someone else"; return }
+				if {$v2 == "joint"} { putserv "PRIVMSG $chan :command help for 'joint' - options: \[nick\] | roll a joint and pass it to either yourself or someone else"; return }
+				if {$v2 == "dab"} { putserv "PRIVMSG $chan :command help for 'dab' - otions: \[nick\] | prepare a dab for yourself or someone else"; return }
+				if {$v2 == "weed"} { putserv "PRIVMSG $chan :command help for 'weed' - show information about the weed package"; return }
+				}
+			if {$v1 == "info"} {
 				putserv "PRIVMSG $chan :bvzm.tcl (version $bvzm::settings::version) - bvzm tool file ~ Coded by rvzm"; return
+			}
+			if {$v1 == "commands"} {
+				putserv "PRIVMSG $chan :bvzm commands | legend - \[flag\]command";
+				putserv "PRIVMSG $chan :flags: - anyone, f friend, -|o chanop, m master"
+				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[f\]rollcall \[f\]uptime \[f\]bitchslap \[-|o\]mvoice \[-|o\]topic"
+				putserv "PRIVMSG $chan :weed package \[-\] - pack, bong, pipe, joint, dab, weed"
 			}
 		}
 		proc hub:mvoice {nick uhost hand chan text} {
