@@ -9,8 +9,7 @@ Currently, bvzm.tcl features a few commands, as well as a few options for automa
 ## Public channel commands
 These commands are used in a channel that the bot is on.
 
-Who can | Command          | Function
-use it  |                  |
+Who     | Command          | Function
 --------|------------------|----------
 anyone  | regme            | Registers a user into the userfile, if they aren't already in it.
 anyone  | greet            | using 'greet set' will set your greet - requires user to be in userfile.
@@ -19,8 +18,7 @@ anyone  | bitchslap        | slap someone with a Banzai item, specified via the 
 anyone  | bvzm             | this command by itself shows an error message
 anyone  | fchk             | check your flags with the bot
 ### Weed package commands
-Who can | Command    | Function
-use it  |            |
+Who     | Command    | Function
 --------|------------|----------
 anyone  | pack       | tells the bot to prepare the channel for a "chan-wide toke-out"
 anyone  | bong       | pass a bong to yourself or someone else
@@ -29,8 +27,7 @@ anyone  | joint      | pass a joint to yourself or someone else
 anyone  | dab        | prepare a dab, then pass it to yourself or someone else
 anyone  | weed       | show info about the weed package
 ### friend commands
-Who can | Command    | Function
-use it  |            |
+Who     | Command    | Function
 --------|------------|
 friends | rollcall   | {requires bvzm chanflag}  lists all nicks in the channel for a Roll Call
 friends | uptime     | shows bots current uptime
@@ -93,7 +90,7 @@ Setting    | Function
 -----------|----------
 mode       | enable (1) or disable (0) dccts (DCC-to-Server)
 reqflag    | flag required to use dccts - can be single flag or multiflag
-chan1      | dccts channel 1 (and default)
+chan1      | dccts channel 1
 chan2      | dccts channel 2
 chan3      | dccts channel 3
 chan4      | dccts channel 4
