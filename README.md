@@ -34,6 +34,7 @@ friends | uptime     | shows bots current uptime
 friends | addslap    | add an object to slap people with via the slap command
 ### chanop commands
 Command | Function
+--------|----------
 mvoice  | {requires bvzm chanflag} mass-voices the channel
 topic   | {requires tcs chanflag} manipulate topic sections via the t<1|2|3> subcommands
 
