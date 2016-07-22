@@ -4,12 +4,14 @@ namespace eval bvzm {
 		namespace eval gen {
 			variable pubtrig "@"
 			variable controller "~"
+			variable nick "bvzm"
 			variable npass "placeholder"
 			variable email "placeholder@example.com"
 			variable homechan "#home"
 		}
 		namespace eval dccts {
 			variable mode "1"
+			variable reqflag "Df"
 			variable chan1 "#chan1"
 			variable chan2 "#chan2"
 			variable chan3 "#chan3"

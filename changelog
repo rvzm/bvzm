@@ -1,5 +1,9 @@
 # changelog for bvzm.tcl
 
+v0.4.1
+ - minor bug fixes
+ - redid the README file
+
 v0.4
  - added slap command
  - added addslap command (friend flag required)
