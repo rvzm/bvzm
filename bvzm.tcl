@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.4              ####################
+# ### Version: 0.4.2            ####################
 # ##################################################
 if {[catch {source scripts/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
@@ -16,6 +16,8 @@ namespace eval bvzm {
 		bind pub - ${bvzm::settings::gen::pubtrig}fchk bvzm::procs::flagcheck
 		bind pub - ${bvzm::settings::gen::pubtrig}slap bvzm::procs::slap
 		bind pub - ${bvzm::settings::gen::pubtrig}bitchslap bvzm::procs::bitchslap
+		bind pub - ${bvzm::settings::gen::pubtrig}wotd bvzm::procs::wotd
+		bind pub - penis bvzm::procs::penis
 		# weed commands
 		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
 		bind pub - ${bvzm::settings::gen::pubtrig}bong bvzm::weed::bong
@@ -30,10 +32,10 @@ namespace eval bvzm {
 		# Op commands
 		bind pub -|o ${bvzm::settings::gen::pubtrig}mvoice bvzm::procs::mass:voice
 		bind pub -|o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
-		# Globop commands
-		bind pub o ${bvzm::settings::gen::pubtrig}
+		bind pub o|o ${bvzm::settings::gen::pubtrig}e bvzm::procs::e
 		# Control Commands
 		bind pub m ${bvzm::settings::gen::controller}bvzm bvzm::procs::hub:control
+		bind pub m ${bvzm::settings::gen::pubtrig}status bvzm::procs::status
 		# flood binds
 		bind flud - pub bvzm::procs::flood
 		# DCC Commands
@@ -128,6 +130,10 @@ namespace eval bvzm {
 			putserv "PRIVMSG $chan :slap item added - $text"
 			return
 		}
+		proc wotd {nick uhost hand chan text} {
+			global bvzm::settings::gen::wotd
+			putserv "PRIVMSG $chan :The Word of the Day is - [bvzm::util::read_db wotd]"
+		}
 		proc hub:uptime {nick host hand chan arg} {
 			global uptime
 			set uu [unixtime]
@@ -144,13 +150,13 @@ namespace eval bvzm {
 			return
 		}
 		proc flagcheck {nick uhost hand chan text} {
-			if {[validuser $nick] == "0"} { putserv "PRIVMSG $chan :Error - you're not in my userfile. use [bvzm::util::getTrigger]regme to register"; return }
-			if {[matchattr $nick f] == "1"} { set chkf friend } else { set chkf normal }
-			if {[matchattr $nick o] == "1"} { set chkf $chkf,globop }
-			if {[matchattr $nick p] == "1"} { set chkf $chkf,partyline }
-			if {[matchattr $nick t] == "1"} { set chkf $chkf,botnet }
-			if {[matchattr $nick m] == "1"} { set chkf $chkf,master }
-			if {[matchattr $nick n] == "1"} { set chkf $chkf,owner }
+			if {[validuser $hand] == "0"} { putserv "PRIVMSG $chan :Error - you're not in my userfile. use [bvzm::util::getTrigger]regme to register"; return }
+			if {[matchattr $hand f] == "1"} { set chkf friend } else { set chkf normal }
+			if {[matchattr $hand o] == "1"} { set chkf $chkf,globop }
+			if {[matchattr $hand p] == "1"} { set chkf $chkf,partyline }
+			if {[matchattr $hand t] == "1"} { set chkf $chkf,botnet }
+			if {[matchattr $hand m] == "1"} { set chkf $chkf,master }
+			if {[matchattr $hand n] == "1"} { set chkf $chkf,owner }
 			putserv "PRIVMSG $chan :$nick your flags are $chkf"
 			return
 		}
@@ -161,9 +167,60 @@ namespace eval bvzm {
 		proc nid {hand idx text} {
 			global bvzm::settings::gen::nick
 			putserv "NICK $bvzm::settings::gen::nick"
-			putserv "PRIVMSG NickServ ID [bvzm::util::getPass]"
+			putserv "PRIVMSG NickServ :ID [bvzm::util::getPass]"
 			putserv "PRIVMSG [bvzm::util::homechan] :Identified to services -- called by $hand (via DCC)"
 			putlog "Identified to services - called by $hand"
+			return
+		}
+		proc status {nick uhost hand chan text} {
+			putserv "PRIVMSG $chan :incoming status update...";
+			set hostname [exec hostname]
+			set commandfound 0;
+			set fp [open "| uptime"]
+			set data [read $fp]
+			if {[catch {close $fp} err]} {
+			putserv "PRIVMSG $chan :Error getting status..."
+			} else {
+			set output [split $data "\n"]
+			foreach line $output {
+				putserv "PRIVMSG $chan :${line}"
+				}
+			}
+		}
+		proc e {nick uhost hand chan arg} {
+			set txt [split $arg]
+			set cmd [string tolower [lindex $txt 0]]
+			set msg [lrange $txt 1 end]
+			if {$cmd == "op"} {
+				if {$msg == ""} { putserv "MODE $chan +o $nick"; return} else { if {[onchan $msg $chan]} { putserv "MODE $chan +o $msg"} }
+			}
+			if {$cmd == "deop"} {
+				if {$msg == ""} { putserv "MODE $chan -o $nick"; return} else { if {[onchan $msg $chan]} { putserv "MODE $chan -o $msg"} }
+			}
+			if {$cmd == "voice"} {
+				if {$msg == ""} { putserv "MODE $chan +v $nick"; return} else { if {[onchan $msg $chan]} { putserv "MODE $chan +v $msg"} }
+			}
+			if {$cmd == "devoice"} {
+				if {$msg == ""} { putserv "MODE $chan -v $nick"; return} else { if {[onchan $msg $chan]} { putserv "MODE $chan -v $msg"} }
+			}
+			if {$cmd == "remove"} {
+				if {![onchan $msg $chan]} { putserv "PRIVMSG $chan :Error - $msg not on chan"; return }
+				putserv "PRIVMSG $chan :$msg - you have 5 seconds to leave, or you will be removed."
+				global gchan knick
+				set gchan $chan
+				set knick $msg
+				utimer 5 bvzm::procs::e:gtfo
+			}
+			if {$cmd == "mode"} { putserv "MODE $chan $msg"; return }
+			if {$cmd == "wotd"} { set wdb wotd; bvzm::util::write_db $wdb $msg; putserv "PRIVMSG $chan :Word of the Day updated - $msg" }
+		}
+		proc e:gtfo {} {
+			global knick gchan
+			putserv "KICK $gchan $knick :Requested"
+			return
+		}
+		proc penis {nick uhost hand chan text} {
+			putserv "PRIVMSG $chan :\01ACTION unzips\01";
 			return
 		}
 		# Controller command
@@ -171,7 +228,6 @@ namespace eval bvzm {
 			set v1 [lindex [split $text] 0]
 			set v2 [lindex [split $text] 1]
 			putcmdlog "*** bvzm controller - $nick has issued a command: $text"
-			putserv "PRIVMSG [bvzm::util::homechan] :*** bvzm controller - $nick has issued a command: $text"
 			if {$v1 == "rehash"} { rehash; putserv "PRIVMSG $chan :Rehashing configuration file"; return }
 			if {$v1 == "restart"} { restart; return }
 			if {$v1 == "die"} { die; return }
@@ -251,7 +307,6 @@ namespace eval bvzm {
 	# weed package
 	namespace eval weed {
 		proc pack {nick uhost hand chan text} {
-			if {[utimerexists bvzm::util::floodchk] == ""} {
 				global wchan
 				set wchan $chan
 				if {[lindex [split $text] 0] != ""} {
@@ -270,9 +325,7 @@ namespace eval bvzm {
 				} else { set delay $bvzm::settings::weed::packdefault }
 				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00311 $delay \00303seconds!\003"
 				utimer $delay bvzm::weed::pack:go
-				utimer $delay bvzm::util::floodchk
 			}
-		}
 		proc pack:go {} {
 			global wchan
 			putserv "PRIVMSG $wchan :\00303::\003045\00303:";

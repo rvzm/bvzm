@@ -1,4 +1,4 @@
-# bvzm.tcl \- version 0.4.1
+# bvzm.tcl \- version 0.4.2
 
 ## Basic Information
 This script is ran and tested with [eggdrop](http://eggheads.org) 1.6.21, and requires
@@ -35,8 +35,13 @@ friends | addslap    | add an object to slap people with via the slap command
 ### chanop commands
 Command | Function
 --------|----------
+e       | channel op commands - basic (de)op/voice and kick
 mvoice  | {requires bvzm chanflag} mass-voices the channel
 topic   | {requires tcs chanflag} manipulate topic sections via the t<1|2|3> subcommands
+### Master commands
+Command | Function
+--------|----------
+status  | displays current system status, such as load averages, and other info found in the `uptime` command
 
 ## bvzm command
 Use the "bvzm" command, and its various subcommands to see information about the script, and
@@ -50,18 +55,16 @@ info         | shows information about bvzm.tcl to the channel
 commands     | show a list of commands
 
 
-
-
 ## Controller
 The controller (set via settings->gen->controller)
 
-Subommand | Function
-----------|----------
-restart   | restart the bot
-die       | kill the bot :(
-nsauth    | have the bot authenticate itself to NickServ - change the settings->gen->npass value to what you wish the bot to use
-registe   | have the bot register itself with NickServ - change settings->gen->npass and settings->gen->email to the desired values
-rehash    | rehash the bot
+Subcommand | Function
+-----------|----------
+restart    | restart the bot
+die        | kill the bot :(
+nsauth     | have the bot authenticate itself to NickServ - change the settings->gen->npass value to what you wish the bot to use
+registe    | have the bot register itself with NickServ - change settings->gen->npass and settings->gen->email to the desired values
+rehash     | rehash the bot
 
 ## DCC Commands
 package  | Command   | Function

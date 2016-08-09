@@ -1,5 +1,10 @@
 # changelog for bvzm.tcl
 
+v0.4.2
+ - added command "e"
+ - added status command
+ - updated fchk command to use handle instead of host
+
 v0.4.1
  - minor bug fixes
  - redid the README file
