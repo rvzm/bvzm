@@ -34,7 +34,7 @@ namespace eval bvzm {
 		bind pub -|o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
 		bind pub o|o ${bvzm::settings::gen::pubtrig}e bvzm::procs::e
 		# Control Commands
-		bind pub m ${bvzm::settings::gen::controller}bvzm bvzm::procs::hub:control
+		bind pub m ${bvzm::settings::gen::controller} bvzm::procs::hub:control
 		bind pub m ${bvzm::settings::gen::pubtrig}status bvzm::procs::status
 		# flood binds
 		bind flud - pub bvzm::procs::flood

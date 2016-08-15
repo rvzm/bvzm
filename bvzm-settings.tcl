@@ -3,7 +3,7 @@ namespace eval bvzm {
 		variable version "0.4.2"
 		namespace eval gen {
 			variable pubtrig "@"
-			variable controller "~"
+			variable controller "~bvzm"
 			variable nick "bvzm"
 			variable npass "placeholder"
 			variable email "placeholder@example.com"
