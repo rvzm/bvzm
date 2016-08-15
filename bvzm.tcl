@@ -160,10 +160,6 @@ namespace eval bvzm {
 			putserv "PRIVMSG $chan :$nick your flags are $chkf"
 			return
 		}
-		proc flood {nick uhost hand type chan} {
-			newignore $host System flood 30
-			putlog "*** flood trigered by $nick"
-		}
 		proc nid {hand idx text} {
 			global bvzm::settings::gen::nick
 			putserv "NICK $bvzm::settings::gen::nick"
