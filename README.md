@@ -37,7 +37,7 @@ Command | Function
 --------|----------
 e       | channel op commands - basic (de)op/voice and kick
 mvoice  | {requires bvzm chanflag} mass-voices the channel
-topic   | {requires tcs chanflag} manipulate topic sections via the t<1|2|3> subcommands
+topic   | {requires tcs chanflag} manipulate topic sections via the t# subcommands
 ### Master commands
 Command | Function
 --------|----------
