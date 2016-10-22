@@ -1,7 +1,7 @@
-# bvzm.tcl \- version 0.4.2
+# bvzm.tcl \- version 0.4.3
 
 ## Basic Information
-This script is ran and tested with [eggdrop](http://eggheads.org) 1.6.21, and requires
+This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.0rc-1, and requires
 no extra packages to be installed.
 
 Currently, bvzm.tcl features a few commands, as well as a few options for automated channel management.

@@ -1,5 +1,8 @@
 # changelog for bvzm.tcl
 
+v0.4.3
+ - Fixed catch for settings
+
 v0.4.2
  - added command "e"
  - added status command
