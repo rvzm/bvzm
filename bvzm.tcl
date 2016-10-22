@@ -4,8 +4,8 @@
 # ### ------------------------- ####################
 # ### Version: 0.4.2            ####################
 # ##################################################
-if {[catch {source scripts/bvzm-settings.tcl} err]} {
-	putlog "Error: Could not load 'scripts/bvzm-settings.tcl' file.";
+if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
+	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
 }
 namespace eval bvzm {
 	namespace eval binds {
