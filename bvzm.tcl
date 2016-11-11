@@ -17,7 +17,6 @@ namespace eval bvzm {
 		bind pub - ${bvzm::settings::gen::pubtrig}slap bvzm::procs::slap
 		bind pub - ${bvzm::settings::gen::pubtrig}bitchslap bvzm::procs::bitchslap
 		bind pub - ${bvzm::settings::gen::pubtrig}wotd bvzm::procs::wotd
-		bind pub - penis bvzm::procs::penis
 		# weed commands
 		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
 		bind pub - ${bvzm::settings::gen::pubtrig}bong bvzm::weed::bong
@@ -54,6 +53,7 @@ namespace eval bvzm {
 			if {$v1 == ""} {
 				puthelp "PRIVMSG $chan :\037ERROR\037: Incorrect Parameters. \037SYNTAX\037: [bvzm::util::getTrigger]bvzm help"; return
 			}
+			if {$v1 == "halp"} { putserv "PRIVMSG $chan :you need halp, yes? we giv halp."; return }
 			if {$v1 == "help"} {
 				if {$v2 == ""} {
 					puthelp "PRIVMSG $chan :\002Public Cmds\002: bvzm commands use [bvzm::util::getTrigger]";
@@ -209,6 +209,7 @@ namespace eval bvzm {
 			}
 			if {$cmd == "mode"} { putserv "MODE $chan $msg"; return }
 			if {$cmd == "wotd"} { set wdb wotd; bvzm::util::write_db $wdb $msg; putserv "PRIVMSG $chan :Word of the Day updated - $msg" }
+			if {$cmd == "invite"} { putserv "PRIVMSG $chan :Alerting $msg to your invite...";  putserv "NOTICE $msg :You have been invited to $chan by $nick :)"; return }
 		}
 		proc e:gtfo {} {
 			global knick gchan
