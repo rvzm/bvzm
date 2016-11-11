@@ -7,10 +7,10 @@ namespace eval bvzm {
 			variable nick "bvzm"
 			variable npass "placeholder"
 			variable email "placeholder@example.com"
-			variable homechan "#example"
+			variable homechan "#placeholder"
 		}
 		namespace eval dccts {
-			variable mode "1"
+			variable mode "0"
 			variable reqflag "Df"
 			variable chan1 "#chan1"
 			variable chan2 "#chan2"
