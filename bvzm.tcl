@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.4.5            ####################
+# ### Version: 0.4.6-dev        ####################
 # ##################################################
 if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
@@ -198,6 +198,7 @@ namespace eval bvzm {
 				if {$msg == "invite"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e invite \[nick\] - notify a user that you have invited them to join the channel"; return }
 				if {$msg == "topic"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e topic \[topic\] - set the channel topic"; return }
 				if {$msg == "mvoice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e mvoice - mass voice the channel"; return }
+				if {$msg == "kick"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e kick \[nick\] - request a user be kicked"; return }
 				puthelp "PRIVMSG $chan :Error - unknown subcommand"
 				return
 			}
