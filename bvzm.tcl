@@ -30,9 +30,10 @@ namespace eval bvzm {
 		bind pub f ${bvzm::settings::gen::pubtrig}addslap bvzm::procs::addslap
 		# bvzm::e
 		bind pub o ${bvzm::settings::gen::pubtrig}e bvzm::procs::e
-		# Control Commands
+		# Owner Commands
 		bind pub m ${bvzm::settings::gen::controller} bvzm::procs::control
 		bind pub m ${bvzm::settings::gen::pubtrig}status bvzm::procs::status
+		bind pub m ${bvzm::settings::gen::pubtrig}exec bvzm::procs::exec
 		# DCC Commands
 		bind dcc - dccts bvzm::dccts::go
 		# Autos
@@ -155,6 +156,19 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan :${line}"
 				}
 			}
+		}
+		proc exec {nick uhost hand chan text} {
+			set commandfound 0;
+                        set fp [open "| $text"]
+                        set data [read $fp]
+                        if {[catch {close $fp} err]} {
+                        putserv "PRIVMSG $chan :Error executing..."
+                        } else {
+                        set output [split $data "\n"]
+                        foreach line $output {
+                                putserv "PRIVMSG $chan :${line}"
+                                }
+                        }
 		}
 		proc e {nick uhost hand chan arg} {
 			set txt [split $arg]
