@@ -36,8 +36,6 @@ friends | addslap    | add an object to slap people with via the slap command
 Command | Function
 --------|----------
 e       | channel op commands - basic (de)op/voice and kick
-mvoice  | {requires bvzm chanflag} mass-voices the channel
-topic   | {requires tcs chanflag} manipulate topic sections via the t# subcommands
 ### Master commands
 Command | Function
 --------|----------
@@ -63,7 +61,7 @@ Subcommand | Function
 restart    | restart the bot
 die        | kill the bot :(
 nsauth     | have the bot authenticate itself to NickServ - change the settings->gen->npass value to what you wish the bot to use
-registe    | have the bot register itself with NickServ - change settings->gen->npass and settings->gen->email to the desired values
+register   | have the bot register itself with NickServ - change settings->gen->npass and settings->gen->email to the desired values
 rehash     | rehash the bot
 
 ## DCC Commands
@@ -75,8 +73,7 @@ dccts    | dccts     | DCC-To-Server - Send messages to predefined channels from
 Flag    | Name         | Function
 --------|--------------|----------
 avoice  | Autovoice    | Automatically voice users on join
-greet   | AutoGreet    | Sends a user-defined message to the channel on join.
-tcs     | TCS          | Control and maintain a topic structure for a channel.
+greet   | AutoGreet    | Sends a user-defined message to the channel on join
 
 ## Settings
 All settings for bvzm.tcl are located in bvzm-settings.tcl

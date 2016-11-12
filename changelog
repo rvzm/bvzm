@@ -1,5 +1,9 @@
 # changelog for bvzm.tcl
 
+v0.4.5
+ - removed TCS
+ - removed mvoice trigger (lol)
+
 v0.4.4
  - added help for bvzm::e
  - removed useless "penis" reply
