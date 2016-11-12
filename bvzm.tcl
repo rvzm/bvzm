@@ -212,6 +212,7 @@ namespace eval bvzm {
 		}
 		proc e:gtfo {} {
 			global knick gchan
+			if {![onchan $knick $gchan]} { return }
 			putserv "KICK $gchan $knick :Requested"
 			return
 		}
