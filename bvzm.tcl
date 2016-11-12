@@ -48,7 +48,6 @@ namespace eval bvzm {
 			if {$v1 == ""} {
 				puthelp "PRIVMSG $chan :\037ERROR\037: Incorrect Parameters. \037SYNTAX\037: [bvzm::util::getTrigger]bvzm help"; return
 			}
-			if {$v1 == "halp"} { putserv "PRIVMSG $chan :you need halp, yes? we giv halp."; return }
 			if {$v1 == "help"} {
 				if {$v2 == ""} {
 					puthelp "PRIVMSG $chan :\002Public Cmds\002: bvzm commands use [bvzm::util::getTrigger]";
@@ -186,6 +185,7 @@ namespace eval bvzm {
 			if {$cmd == "invite"} { putserv "PRIVMSG $chan :Alerting $msg to your invite...";  putserv "NOTICE $msg :You have been invited to $chan by $nick :)"; return }
 			if {$cmd == "topic"} { putserv "TOPIC $chan :$msg"; return }
 			if {$cmd == "mvoice"} { bvzm::util::massvoice $chan; return }
+			if {$cmd == "kick"} { putserv "KICK $chan :$msg"; return }
 			if {$cmd == "help"} {
 				if {$msg == ""} { puthelp "PRIVMSG $chan :For commands, use \'[bvzm::util::getTrigger]e help commands\'"; return }
 				if {$msg == "commands"} { puthelp "PRIVMSG $chan :Commands for bvzm e channel management system"; puthelp "PRIVMSG $chan :op deop voice devoice remove mode wotd invite topic mvoice"; puthelp "PRIVMSG $chan :For help with a command, use '[bvzm::util::getTrigger]e  help <command>'"; return }
