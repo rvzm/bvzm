@@ -185,7 +185,7 @@ namespace eval bvzm {
 			if {$cmd == "invite"} { putserv "PRIVMSG $chan :Alerting $msg to your invite...";  putserv "NOTICE $msg :You have been invited to $chan by $nick :)"; return }
 			if {$cmd == "topic"} { putserv "TOPIC $chan :$msg"; return }
 			if {$cmd == "mvoice"} { bvzm::util::massvoice $chan; return }
-			if {$cmd == "kick"} { putserv "KICK $chan :$msg"; return }
+			if {$cmd == "kick"} { e:kick $chan $msg; return }
 			if {$cmd == "help"} {
 				if {$msg == ""} { puthelp "PRIVMSG $chan :For commands, use \'[bvzm::util::getTrigger]e help commands\'"; return }
 				if {$msg == "commands"} { puthelp "PRIVMSG $chan :Commands for bvzm e channel management system"; puthelp "PRIVMSG $chan :op deop voice devoice remove mode wotd invite topic mvoice"; puthelp "PRIVMSG $chan :For help with a command, use '[bvzm::util::getTrigger]e  help <command>'"; return }
@@ -202,10 +202,9 @@ namespace eval bvzm {
 				return
 			}
 		}
-		proc e:gtfo {} {
-			global knick gchan
-			if {![onchan $knick $gchan]} { return }
-			putserv "KICK $gchan $knick :Requested"
+		proc e:kick {chan nick} {
+			if {![onchan $nick $chan]} { return }
+			putserv "KICK $chan $nick :Requested"
 			return
 		}
 		# Controller command
