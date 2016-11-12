@@ -35,7 +35,6 @@ namespace eval bvzm {
 		bind pub m ${bvzm::settings::gen::pubtrig}status bvzm::procs::status
 		# DCC Commands
 		bind dcc - dccts bvzm::dccts::go
-		bind dcc - nid bvzm::procs::nid
 		# Autos
 		bind join - * bvzm::procs::hub:autovoice
 		bind join - * bvzm::greet::greet:join
@@ -61,7 +60,8 @@ namespace eval bvzm {
 				if {$v2 == "fchk"} { putserv "PRIVMSG $chan :command help for 'fchk' - check what flags you have, or if you are registered with me"; return }
 				if {$v2 == "rollcall"} { putserv "PRIVMSG $chan :command help for 'rollcall' - reqs: friend flag | does a roll call, listing all nicks in channel"; return }
 				if {$v2 == "uptime"} { putserv "PRIVMSG $chan :command help for 'uptime' - reqs: friend flag | displays my current uptime"; return }
-				if {$v2 == "bitchslap"} {putserv "PRIVMSG $chan :command help for 'bitchslap' - options: <nickname> | reqs: friend flag | slaps the given nickname"; return }
+				if {$v2 == "slap"} { putserv "PRIVMSG $chan :command help for 'slap' - options: <nickname> -  slaps the given nickname"; return }
+				if {$v2 == "bitchslap"} {putserv "PRIVMSG $chan :command help for 'bitchslap' - options: <nickname> | slaps the given nickname, with banzai!"; return }
 				# weed commands
 				if {$v2 == "pack"} { putserv "PRIVMSG $chan :command help for 'pack' - options: \[duration\] | pack a bowl, optionally you may specify how long to wait"; return }
 				if {$v2 == "bong"} { putserv "PRIVMSG $chan :command help for 'bong' - options: \[nick\] | pack a bong and pass it to either yourself or someone else"; return }
@@ -76,7 +76,7 @@ namespace eval bvzm {
 			if {$v1 == "commands"} {
 				putserv "PRIVMSG $chan :bvzm commands | legend - \[flag\]command";
 				putserv "PRIVMSG $chan :flags: - anyone, f friend, -|o chanop, m master"
-				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[f\]rollcall \[f\]uptime \[f\]bitchslap \[-|o\]mvoice \[-|o\]topic"
+				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[-\]slap \[-\]bitchslap \[f\]rollcall \[f\]uptime"
 				putserv "PRIVMSG $chan :weed package \[-\] - pack, bong, pipe, joint, dab, weed"
 			}
 		}
@@ -123,8 +123,8 @@ namespace eval bvzm {
 			puthelp "privmsg $chan : :: $nick - My uptime is [duration $tt]."
 		}
 		proc register {nick uhost hand chan text} {
-			if {[validuser $nick] == "1"} { putserv "PRIVMSG $chan :Sorry $nick, but you're already registered. :)"; return }
-			if {[adduser $nick $uhost] == "1"} {
+			if {[validuser $hand] == "1"} { putserv "PRIVMSG $chan :Sorry $nick, but you're already registered. :)"; return }
+			if {[adduser $hand $uhost] == "1"} {
 				putserv "PRIVMSG [bvzm::util::homechan] :*** Introduced user - $nick / $uhost"
 				putlog "*** Introduced to user - $nick / $uhost"
 				putserv "PRIVMSG $chan :Congradulations, $nick! you are now in my system! yay :)"
@@ -140,14 +140,6 @@ namespace eval bvzm {
 			if {[matchattr $hand m] == "1"} { set chkf $chkf,master }
 			if {[matchattr $hand n] == "1"} { set chkf $chkf,owner }
 			putserv "PRIVMSG $chan :$nick your flags are $chkf"
-			return
-		}
-		proc nid {hand idx text} {
-			global bvzm::settings::gen::nick
-			putserv "NICK $bvzm::settings::gen::nick"
-			putserv "PRIVMSG NickServ :ID [bvzm::util::getPass]"
-			putserv "PRIVMSG [bvzm::util::homechan] :Identified to services -- called by $hand (via DCC)"
-			putlog "Identified to services - called by $hand"
 			return
 		}
 		proc status {nick uhost hand chan text} {
