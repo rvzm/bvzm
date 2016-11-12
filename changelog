@@ -1,5 +1,8 @@
 # changelog for bvzm.tcl
 
+v0.4.6-dev
+ - added plugin 'lastfm'
+
 v0.4.5
  - removed TCS
  - removed mvoice trigger (lol)
