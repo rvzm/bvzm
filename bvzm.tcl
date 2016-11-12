@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.4.3            ####################
+# ### Version: 0.4.4            ####################
 # ##################################################
 if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
@@ -35,8 +35,6 @@ namespace eval bvzm {
 		# Control Commands
 		bind pub m ${bvzm::settings::gen::controller} bvzm::procs::hub:control
 		bind pub m ${bvzm::settings::gen::pubtrig}status bvzm::procs::status
-		# flood binds
-		bind flud - pub bvzm::procs::flood
 		# DCC Commands
 		bind dcc - dccts bvzm::dccts::go
 		bind dcc - nid bvzm::procs::nid
@@ -84,18 +82,6 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan :flags: - anyone, f friend, -|o chanop, m master"
 				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[f\]rollcall \[f\]uptime \[f\]bitchslap \[-|o\]mvoice \[-|o\]topic"
 				putserv "PRIVMSG $chan :weed package \[-\] - pack, bong, pipe, joint, dab, weed"
-			}
-		}
-		proc mass:voice {nick uhost hand chan text} {
-			if {![channel get $chan bvzm]} {return}
-			set botnick "bvzm";
-			if {[string tolower $nick] != [string tolower $botnick]} {
-				foreach whom [chanlist $chan] {
-					if {![isvoice $whom $chan] && ![isbotnick $whom] && [onchan $whom $chan]} {
-						pushmode $chan +v $whom
-					}
-				}
-				flushmode $chan
 			}
 		}
 		proc nicks:rollcall {nick uhost hand chan text} {
@@ -188,16 +174,16 @@ namespace eval bvzm {
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [lrange $txt 1 end]
 			if {$cmd == "op"} {
-				if {$msg == ""} { putserv "MODE $chan +o $nick"; return} else { if {[onchan $msg $chan]} { putserv "MODE $chan +o $msg"} }
+				if {$msg == ""} { putserv "MODE $chan +o $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan +o $msg" } }
 			}
 			if {$cmd == "deop"} {
-				if {$msg == ""} { putserv "MODE $chan -o $nick"; return} else { if {[onchan $msg $chan]} { putserv "MODE $chan -o $msg"} }
+				if {$msg == ""} { putserv "MODE $chan -o $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan -o $msg" } }
 			}
 			if {$cmd == "voice"} {
-				if {$msg == ""} { putserv "MODE $chan +v $nick"; return} else { if {[onchan $msg $chan]} { putserv "MODE $chan +v $msg"} }
+				if {$msg == ""} { putserv "MODE $chan +v $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan +v $msg" } }
 			}
 			if {$cmd == "devoice"} {
-				if {$msg == ""} { putserv "MODE $chan -v $nick"; return} else { if {[onchan $msg $chan]} { putserv "MODE $chan -v $msg"} }
+				if {$msg == ""} { putserv "MODE $chan -v $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan -v $msg" } }
 			}
 			if {$cmd == "remove"} {
 				if {![onchan $msg $chan]} { putserv "PRIVMSG $chan :Error - $msg not on chan"; return }
@@ -210,14 +196,28 @@ namespace eval bvzm {
 			if {$cmd == "mode"} { putserv "MODE $chan $msg"; return }
 			if {$cmd == "wotd"} { set wdb wotd; bvzm::util::write_db $wdb $msg; putserv "PRIVMSG $chan :Word of the Day updated - $msg" }
 			if {$cmd == "invite"} { putserv "PRIVMSG $chan :Alerting $msg to your invite...";  putserv "NOTICE $msg :You have been invited to $chan by $nick :)"; return }
+			if {$cmd == "topic"} { putserv "TOPIC $chan :$msg"; return }
+			if {$cmd == "mvoice"} { bvzm::util::massvoice $chan; return }
+			if {$cmd == "help"} {
+				set topic [string tolower [lindex $txt 0]]
+				set v2 [string tolower [lindex $txt 1]]
+				set v3 [string tolower [lindex $txt 2]]
+				if {$topic == ""} { puthelp "PRIVMSG $chan :For commands, use \'[bvzm::util::getTrigger]e help commands\'"; return }
+				if {$topic == "commands"} { puthelp "PRIVMSG $chan :Commands for bvzm e channel management system"; puthelp "PRIVMSG $chan :op deop voice devoice remove mode wotd invite topic mvoice"; puthelp "PRIVMSG $chan :For help with a command, use '[bvzm::util::getTrigger]e  help <command>'"; return }
+				if {$topic == "op"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e op \[nick\] -  Op yourself or someone else"; return }
+				if {$topic == "deop"} { puthelp "PRIVMSG $chan :[bvzm:util::getTrigger]e deop \[nick\]  - deop yourself or someone else"; return }
+				if {$topic == "voice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e voice \[nick\] - voice yourself or someone else"; return }
+				if {$topic == "devoice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e devoice \[nick\] - devoice yourself or someone else"; return }
+				if {$topic == "remove"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e remove \[nick\] - notify the channel that a user has 5 seconds to leave or be removed"; return }
+				if {$topic == "wotd"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e wotd \[new word of the day\] - set the Word of the Day"; return }
+				if {$topic == "invite"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e invite \[nick\] - notify a user that you have invited them to join the channel"; return }
+				if {$topic == "topic"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e topic \[topic\] - set the channel topic"; return }
+				if {$topic == "mvoice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e mvoice - mass voice the channel"; return }
+			}
 		}
 		proc e:gtfo {} {
 			global knick gchan
 			putserv "KICK $gchan $knick :Requested"
-			return
-		}
-		proc penis {nick uhost hand chan text} {
-			putserv "PRIVMSG $chan :\01ACTION unzips\01";
 			return
 		}
 		# Controller command
@@ -246,6 +246,16 @@ namespace eval bvzm {
 		# Utility procs
 	}
 	namespace eval util {
+		# massvoice
+		proc massvoice { chan } {
+			foreach whom [chanlist $chan] {
+				if {![isvoice $whom $chan] && ![isbotnick $whom] && [onchan $whom $chan]} {
+					pushmode $chan +v $whom
+					}
+				}
+			flushmode $chan
+		}
+
 		# write to *.db files
 		proc write_db { w_db w_info } {
 			set fs_write [open $w_db w]
