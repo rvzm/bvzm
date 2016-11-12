@@ -2,7 +2,7 @@
 # ### bvzm.tcl - bvzm tool file ####################
 # ### Coded by rvzm             ####################
 # ### ------------------------- ####################
-# ### Version: 0.4.4            ####################
+# ### Version: 0.4.5            ####################
 # ##################################################
 if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
@@ -25,14 +25,13 @@ namespace eval bvzm {
 		bind pub - ${bvzm::settings::gen::pubtrig}dab bvzm::weed::dab
 		bind pub - ${bvzm::settings::gen::pubtrig}weed bvzm::weed::info
 		# Friendly commands
-		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::nicks:rollcall
-		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::hub:uptime
+		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::rollcall
+		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::uptime
 		bind pub f ${bvzm::settings::gen::pubtrig}addslap bvzm::procs::addslap
-		# Op commands
-		bind pub -|o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
+		# bvzm::e
 		bind pub o ${bvzm::settings::gen::pubtrig}e bvzm::procs::e
 		# Control Commands
-		bind pub m ${bvzm::settings::gen::controller} bvzm::procs::hub:control
+		bind pub m ${bvzm::settings::gen::controller} bvzm::procs::control
 		bind pub m ${bvzm::settings::gen::pubtrig}status bvzm::procs::status
 		# DCC Commands
 		bind dcc - dccts bvzm::dccts::go
@@ -63,8 +62,6 @@ namespace eval bvzm {
 				if {$v2 == "rollcall"} { putserv "PRIVMSG $chan :command help for 'rollcall' - reqs: friend flag | does a roll call, listing all nicks in channel"; return }
 				if {$v2 == "uptime"} { putserv "PRIVMSG $chan :command help for 'uptime' - reqs: friend flag | displays my current uptime"; return }
 				if {$v2 == "bitchslap"} {putserv "PRIVMSG $chan :command help for 'bitchslap' - options: <nickname> | reqs: friend flag | slaps the given nickname"; return }
-				if {$v2 == "mvoice"} { putserv "PRIVMSG $chan :command help for 'mvoice' - reqs: chanop flag | mass-voices the channel"; return }
-				if {$v2 == "topic"} { putserv "PRIVMSG $chan :command help for 'topic' - options: t<1|2|3> <text> | reqs: chanop flag | set the topic section for t<num> to <text>"; return }
 				# weed commands
 				if {$v2 == "pack"} { putserv "PRIVMSG $chan :command help for 'pack' - options: \[duration\] | pack a bowl, optionally you may specify how long to wait"; return }
 				if {$v2 == "bong"} { putserv "PRIVMSG $chan :command help for 'bong' - options: \[nick\] | pack a bong and pass it to either yourself or someone else"; return }
@@ -83,7 +80,7 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan :weed package \[-\] - pack, bong, pipe, joint, dab, weed"
 			}
 		}
-		proc nicks:rollcall {nick uhost hand chan text} {
+		proc rollcall {nick uhost hand chan text} {
 			if {![channel get $chan bvzm]} {return}
 			set rollcall [chanlist $chan]
 			putserv "PRIVMSG $chan :Roll Call!"
@@ -219,7 +216,7 @@ namespace eval bvzm {
 			return
 		}
 		# Controller command
-		proc hub:control {nick uhost hand chan text} {
+		proc control {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
 			set v2 [lindex [split $text] 1]
 			putcmdlog "*** bvzm controller - $nick has issued a command: $text"
@@ -234,7 +231,7 @@ namespace eval bvzm {
 			}
 		}
 		# Autos procs
-		proc hub:autovoice {nick host hand chan} {
+		proc autovoice {nick host hand chan} {
 			if {[channel get $chan "avoice"]} {
 				pushmode $chan +v $nick
 				break
@@ -391,48 +388,6 @@ namespace eval bvzm {
 			if {![channel get $chan greet]} {return}
 			set file [string map {/ .} $bvzm::settings::dir::greet/$nick]
 			if {[file exists $file]} { putserv "PRIVMSG $chan :\[$nick\] - [bvzm::util::read_db $file]"}
-		}
-	}
-	# topic controller mechanism
-	namespace eval tcs {
-		if {![file exists $bvzm::settings::dir::tcs]} {
-			file mkdir $bvzm::settings::dir::tcs
-		}
-
-		proc do:topic {nick uhost hand chan arg} {
-			if {![channel get $chan tcs]} {return}
-			if {![file exists "$bvzm::settings::dir::tcs/$chan"]} { file mkdir $bvzm::settings::dir::tcs/$chan }
-			set cdir "$bvzm::settings::dir::tcs/$chan"
-			global ctlchan top1 top2 top3
-			set top1 "$cdir/top1.db"
-			set top2 "$cdir/top2.db"
-			set top3 "$cdir/top3.db"
-			bvzm::util::create_db $top1 "null"
-			bvzm::util::create_db $top2 "null"
-			bvzm::util::create_db $top3 "null"
-			set txt [split $arg]
-			set cmd [string tolower [lindex $txt 0]]
-			set msg [join [lrange $txt 1 end]]
-			set ctlchan $chan
-			if {$cmd == "t1"} {
-				bvzm::util::write_db $top1 $msg
-				change_topic
-			}
-			if {$cmd == "t2"} {
-			bvzm::util::write_db $top2 $msg
-			change_topic
-			}
-			if {$cmd == "t3"} {
-				bvzm::util::write_db $top3 $msg
-				change_topic
-			}
-		}
-		proc change_topic { } {
-			global ctlchan top1 top2 top3
-			set top1 [bvzm::util::read_db $top1]
-			set top2 [bvzm::util::read_db $top2]
-			set top3 [bvzm::util::read_db $top3]
-			putquick "TOPIC $ctlchan :$top1 | $top2 | $top3"
 		}
 	}
 	# dccts mechanism
