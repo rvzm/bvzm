@@ -199,20 +199,19 @@ namespace eval bvzm {
 			if {$cmd == "topic"} { putserv "TOPIC $chan :$msg"; return }
 			if {$cmd == "mvoice"} { bvzm::util::massvoice $chan; return }
 			if {$cmd == "help"} {
-				set topic [string tolower [lindex $txt 0]]
-				set v2 [string tolower [lindex $txt 1]]
-				set v3 [string tolower [lindex $txt 2]]
-				if {$topic == ""} { puthelp "PRIVMSG $chan :For commands, use \'[bvzm::util::getTrigger]e help commands\'"; return }
-				if {$topic == "commands"} { puthelp "PRIVMSG $chan :Commands for bvzm e channel management system"; puthelp "PRIVMSG $chan :op deop voice devoice remove mode wotd invite topic mvoice"; puthelp "PRIVMSG $chan :For help with a command, use '[bvzm::util::getTrigger]e  help <command>'"; return }
-				if {$topic == "op"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e op \[nick\] -  Op yourself or someone else"; return }
-				if {$topic == "deop"} { puthelp "PRIVMSG $chan :[bvzm:util::getTrigger]e deop \[nick\]  - deop yourself or someone else"; return }
-				if {$topic == "voice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e voice \[nick\] - voice yourself or someone else"; return }
-				if {$topic == "devoice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e devoice \[nick\] - devoice yourself or someone else"; return }
-				if {$topic == "remove"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e remove \[nick\] - notify the channel that a user has 5 seconds to leave or be removed"; return }
-				if {$topic == "wotd"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e wotd \[new word of the day\] - set the Word of the Day"; return }
-				if {$topic == "invite"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e invite \[nick\] - notify a user that you have invited them to join the channel"; return }
-				if {$topic == "topic"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e topic \[topic\] - set the channel topic"; return }
-				if {$topic == "mvoice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e mvoice - mass voice the channel"; return }
+				if {$msg == ""} { puthelp "PRIVMSG $chan :For commands, use \'[bvzm::util::getTrigger]e help commands\'"; return }
+				if {$msg == "commands"} { puthelp "PRIVMSG $chan :Commands for bvzm e channel management system"; puthelp "PRIVMSG $chan :op deop voice devoice remove mode wotd invite topic mvoice"; puthelp "PRIVMSG $chan :For help with a command, use '[bvzm::util::getTrigger]e  help <command>'"; return }
+				if {$msg == "op"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e op \[nick\] -  Op yourself or someone else"; return }
+				if {$msg == "deop"} { puthelp "PRIVMSG $chan :[bvzm:util::getTrigger]e deop \[nick\]  - deop yourself or someone else"; return }
+				if {$msg == "voice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e voice \[nick\] - voice yourself or someone else"; return }
+				if {$msg == "devoice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e devoice \[nick\] - devoice yourself or someone else"; return }
+				if {$msg == "remove"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e remove \[nick\] - notify the channel that a user has 5 seconds to leave or be removed"; return }
+				if {$msg == "wotd"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e wotd \[new word of the day\] - set the Word of the Day"; return }
+				if {$msg == "invite"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e invite \[nick\] - notify a user that you have invited them to join the channel"; return }
+				if {$msg == "topic"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e topic \[topic\] - set the channel topic"; return }
+				if {$msg == "mvoice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e mvoice - mass voice the channel"; return }
+				puthelp "PRIVMSG $chan :Error - unknown subcommand"
+				return
 			}
 		}
 		proc e:gtfo {} {

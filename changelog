@@ -1,5 +1,11 @@
 # changelog for bvzm.tcl
 
+v0.4.4
+ - added help for bvzm::e
+ - removed useless "penis" reply
+ - added features to bvzm::e
+ - removed mvoice command, as this is now part of bvzm::e
+
 v0.4.3
  - Fixed catch for settings
 

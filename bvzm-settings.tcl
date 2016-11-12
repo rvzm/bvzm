@@ -5,9 +5,9 @@ namespace eval bvzm {
 			variable pubtrig "@"
 			variable controller "~bvzm"
 			variable nick "bvzm"
-			variable npass "placeholder"
-			variable email "placeholder@example.com"
-			variable homechan "#placeholder"
+			variable npass "BALLSofFIRE223420*"
+			variable email "bvzm-project@outlook.com"
+			variable homechan "#bvzm"
 		}
 		namespace eval dccts {
 			variable mode "0"
