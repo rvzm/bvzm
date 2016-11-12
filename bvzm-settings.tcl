@@ -1,13 +1,13 @@
 namespace eval bvzm {
 	namespace eval settings {
-		variable version "0.4.4"
+		variable version "0.4.5"
 		namespace eval gen {
 			variable pubtrig "@"
 			variable controller "~bvzm"
 			variable nick "bvzm"
-			variable npass "BALLSofFIRE223420*"
-			variable email "bvzm-project@outlook.com"
-			variable homechan "#bvzm"
+			variable npass "placeholder"
+			variable email "placeholder"
+			variable homechan "#placeholder"
 		}
 		namespace eval dccts {
 			variable mode "0"
@@ -23,7 +23,6 @@ namespace eval bvzm {
 		}
 		namespace eval dir {
 			variable greet "gdata"
-			variable tcs "data"
 		}
 		namespace eval file {
 			variable slapdata "slapdata/slaps.txt"
@@ -33,7 +32,6 @@ namespace eval bvzm {
 			setudef flag bvzm
 			setudef flag avoice
 			setudef flag greet
-			setudef flag tcs
 		}
 	}
 }
