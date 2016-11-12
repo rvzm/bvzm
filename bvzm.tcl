@@ -29,9 +29,8 @@ namespace eval bvzm {
 		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::hub:uptime
 		bind pub f ${bvzm::settings::gen::pubtrig}addslap bvzm::procs::addslap
 		# Op commands
-		bind pub -|o ${bvzm::settings::gen::pubtrig}mvoice bvzm::procs::mass:voice
 		bind pub -|o ${bvzm::settings::gen::pubtrig}topic bvzm::tcs::do:topic
-		bind pub o|o ${bvzm::settings::gen::pubtrig}e bvzm::procs::e
+		bind pub o ${bvzm::settings::gen::pubtrig}e bvzm::procs::e
 		# Control Commands
 		bind pub m ${bvzm::settings::gen::controller} bvzm::procs::hub:control
 		bind pub m ${bvzm::settings::gen::pubtrig}status bvzm::procs::status
