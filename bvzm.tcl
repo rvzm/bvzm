@@ -158,7 +158,6 @@ namespace eval bvzm {
 			}
 		}
 		proc exec {nick uhost hand chan text} {
-			set commandfound 0;
                         set fp [open "| $text"]
                         set data [read $fp]
                         if {[catch {close $fp} err]} {
