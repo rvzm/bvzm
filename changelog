@@ -1,7 +1,11 @@
 # changelog for bvzm.tcl
 
+v0.4.6-dev rc1 build 0824
+ - added 'whoami' command
+ - added 'version' command
+
 v0.4.6-dev
- - added plugin 'lastfm'
+ - added plugin 'lastfm' - which doesnt work
 
 v0.4.5
  - removed TCS
