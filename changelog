@@ -1,4 +1,14 @@
 # changelog for bvzm.tcl
+# ----------------------
+# this file catalogs the entire
+# changelog for bvzm, and has not
+# nor will ever have items removed
+# or edited. Only additions will be
+# made to this file.
+
+v0.4.6
+ - removed plugin 'lastfm'
+ - includes changes made in 'v0.4.6-dev rc1 build 0824'
 
 v0.4.6-dev rc1 build 0824
  - added 'whoami' command

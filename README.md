@@ -1,7 +1,5 @@
-# bvzm.tcl \- version 0.4.6-dev rc1
+# bvzm.tcl \- version 0.4.6-dev RELEASE
 
-
-# !! This version may have errors, typos, and some stuff may not work at all!
 
 ## Basic Information
 This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.0rc-1, and requires
