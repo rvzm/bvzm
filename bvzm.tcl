@@ -288,6 +288,18 @@ namespace eval bvzm {
 				close $crtdb
 			}
 		}
+		proc getVersion {} {
+			global bvzm::settings::version
+			return $bvzm::settings::version
+		}
+		proc getBuild {} {
+			global bvzm::settings::build
+			return $bvzm::settings::build
+		}
+		proc getRelease {} {
+			global bvzm::settings::release
+			return $bvzm::settings::release
+		}
 		proc getTrigger {} {
 			global bvzm::settings::gen::pubtrig
 			return $bvzm::settings::gen::pubtrig
