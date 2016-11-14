@@ -17,6 +17,8 @@ namespace eval bvzm {
 		bind pub - ${bvzm::settings::gen::pubtrig}slap bvzm::procs::slap
 		bind pub - ${bvzm::settings::gen::pubtrig}bitchslap bvzm::procs::bitchslap
 		bind pub - ${bvzm::settings::gen::pubtrig}wotd bvzm::procs::wotd
+		bind pub - ${bvzm::settings::gen::pubtrig}whoami bvzm::procs::whoami
+		bind pub - ${bvzm::settings::gen::pubtrig}version bvzm::procs::version
 		# weed commands
 		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
 		bind pub - ${bvzm::settings::gen::pubtrig}bong bvzm::weed::bong
@@ -168,6 +170,14 @@ namespace eval bvzm {
                                 putserv "PRIVMSG $chan :${line}"
                                 }
                         }
+		}
+		proc whoami {nick uhost hand chan text} {
+			putserv "PRIVMSG $chan :You are $nick \[$uhost\] - According to my system, your handle is $hand"; return
+		}
+		proc version {nick uhost hand chan text} {
+			putserv "PRIVMSG $chan :bvzm -> version-[bvzm::util::getVersion] build [bvzm::util::getBuild]"
+			putserv "PRIVMSG $chan :bvzm -> release: [bvzm::util::getRelease]"
+			return
 		}
 		proc e {nick uhost hand chan arg} {
 			set txt [split $arg]
