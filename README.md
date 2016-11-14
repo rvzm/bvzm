@@ -1,4 +1,4 @@
-# bvzm.tcl \- version 0.4.6-dev RELEASE
+# bvzm.tcl \- version 0.4.6
 
 
 ## Basic Information
