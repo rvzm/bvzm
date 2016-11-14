@@ -1,4 +1,4 @@
-# bvzm.tcl \- version 0.4.6-dev
+# bvzm.tcl \- version 0.4.6-dev rc1
 
 
 # !! This version may have errors, typos, and some stuff may not work at all!
@@ -20,6 +20,8 @@ anyone  | slap             | slap someone with a random object from the slapdata
 anyone  | bitchslap        | slap someone with a Banzai item, specified via the file set in settings->file->slapbanzai
 anyone  | bvzm             | this command by itself shows an error message
 anyone  | fchk             | check your flags with the bot
+anyone  | whoami           | see your nick, userhost, and handle as seen by the bot
+anyone  | version          | full version reply
 ### Weed package commands
 Who     | Command    | Function
 --------|------------|----------
