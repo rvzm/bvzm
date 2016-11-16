@@ -11,7 +11,7 @@ namespace eval bvzm {
 	namespace eval binds {
 		# Main Commands
 		bind pub - ${bvzm::settings::gen::pubtrig}bvzm bvzm::procs::bvzm:main
-		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::greet:sys
+		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::go
 		bind pub - ${bvzm::settings::gen::pubtrig}regme bvzm::procs::register
 		bind pub - ${bvzm::settings::gen::pubtrig}fchk bvzm::procs::flagcheck
 		bind pub - ${bvzm::settings::gen::pubtrig}slap bvzm::procs::slap
@@ -39,8 +39,8 @@ namespace eval bvzm {
 		# DCC Commands
 		bind dcc - dccts bvzm::dccts::go
 		# Autos
-		bind join - * bvzm::procs::hub:autovoice
-		bind join - * bvzm::greet::greet:join
+		bind join - * bvzm::procs::autovoice
+		bind join - * bvzm::greet::join
 	}
 	namespace eval procs {
 		# Main Command Procs
@@ -118,7 +118,7 @@ namespace eval bvzm {
 			global bvzm::settings::gen::wotd
 			putserv "PRIVMSG $chan :The Word of the Day is - [bvzm::util::read_db wotd]"
 		}
-		proc hub:uptime {nick host hand chan arg} {
+		proc uptime {nick host hand chan arg} {
 			global uptime
 			set uu [unixtime]
 			set tt [incr uu -$uptime]
@@ -402,7 +402,7 @@ namespace eval bvzm {
 		if {![file exists $bvzm::settings::dir::greet]} {
 			file mkdir $bvzm::settings::dir::greet
 		}
-		proc greet:sys {nick uhost hand chan arg} {
+		proc go {nick uhost hand chan arg} {
 			set txt [split $arg]
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [join [lrange $txt 1 end]]
@@ -412,7 +412,7 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan :Greet for $nick set";
 			}
 		}
-		proc greet:join {nick uhost hand chan} {
+		proc join {nick uhost hand chan} {
 			if {![channel get $chan greet]} {return}
 			set file [string map {/ .} $bvzm::settings::dir::greet/$nick]
 			if {[file exists $file]} { putserv "PRIVMSG $chan :\[$nick\] - [bvzm::util::read_db $file]"}
