@@ -2,13 +2,14 @@
 
 
 ## Basic Information
-This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.0 rc1
+This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.2
 Currently requires no extra packages to be installed.
 
 Currently, bvzm.tcl features a few commands, as well as a few options for automated channel management.
 
 ## Public channel commands
 These commands are used in a channel that the bot is on.
+The command character is defined by settings->gen->pubtrig
 
 Who     | Command          | Function
 --------|------------------|----------
