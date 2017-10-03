@@ -6,6 +6,12 @@
 # or edited. Only additions will be
 # made to this file.
 
+v0.4.7
+ - moved 'uptime' to work for bot friends
+ - removed 'wotd' command and proc/settings
+ - changed settings->dir->greet to settings->greet->dir
+ - removed 'slap' and 'bitchslap' command, proc, and settings
+
 v0.4.6
  - removed plugin 'lastfm'
  - includes changes made in 'v0.4.6-dev rc1 build 0824'
