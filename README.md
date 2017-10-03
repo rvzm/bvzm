@@ -5,7 +5,8 @@
 This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.2
 Currently requires no extra packages to be installed.
 
-Currently, bvzm.tcl features a few commands, as well as a few options for automated channel management.
+## Install
+to install bvzm.tcl, clone it to your scripts/ folder, then copy bvzm-settings.tcl.dist to bvzm-settingxs.tcl and edit to your liking.
 
 ## Public channel commands
 These commands are used in a channel that the bot is on.
