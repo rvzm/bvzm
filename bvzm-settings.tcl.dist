@@ -27,6 +27,8 @@ namespace eval bvzm {
 			variable dir "gdata"
 		}
 		namespace eval flags {
+			# you should remove this...
+			die('bvzm - settings not edited')
 			setudef flag bvzm
 			setudef flag avoice
 			setudef flag greet
