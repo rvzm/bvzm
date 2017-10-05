@@ -125,17 +125,19 @@ namespace eval bvzm {
 			}
 		}
 		proc exec {nick uhost hand chan text} {
-                        set fp [open "| $text"]
-                        set data [read $fp]
-                        if {[catch {close $fp} err]} {
-                        putserv "PRIVMSG $chan :Error executing..."
-                        } else {
-                        set output [split $data "\n"]
-                        foreach line $output {
-                                putserv "PRIVMSG $chan :${line}"
-                                }
-                        }
+			set fp [open "| $text"]
+			set data [read $fp]
+			if {[catch {close $fp} err]} {
+			putserv "PRIVMSG $chan :Error executing..."
+			} else {
+				set output [split $data "\n"]
+				foreach line $output {
+				putserv "PRIVMSG $chan :${line}"
+				}
+			}
 		}
+				
+
 		proc whoami {nick uhost hand chan text} {
 			putserv "PRIVMSG $chan :You are $nick \[$uhost\] - According to my system, your handle is $hand"; return
 		}
@@ -210,7 +212,6 @@ namespace eval bvzm {
 				return;
 			}
 		}
-		proc serv {nick uhost hand text} {
 		# Autos procs
 		proc autovoice {nick host hand chan} {
 			if {[channel get $chan "avoice"]} {
@@ -303,7 +304,6 @@ namespace eval bvzm {
 				} else { set delay $bvzm::settings::weed::packdefault }
 				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00311 $delay \00303seconds!\003"
 				utimer $delay bvzm::weed::pack:go
-				}
 			}
 		}
 		proc pack:go {} {
