@@ -6,6 +6,9 @@
 # or edited. Only additions will be
 # made to this file.
 
+v0.4.8
+ - added missing close brace
+
 v0.4.7
  - moved 'uptime' to work for bot friends
  - removed 'wotd' command and proc/settings
