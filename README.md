@@ -1,4 +1,4 @@
-# bvzm.tcl \- version 0.4.6
+# bvzm.tcl \- version 0.4.8
 
 
 ## Basic Information
@@ -16,8 +16,6 @@ Who     | Command          | Function
 --------|------------------|----------
 anyone  | regme            | Registers a user into the userfile, if they aren't already in it.
 anyone  | greet            | using 'greet set' will set your greet - requires user to be in userfile.
-anyone  | slap             | slap someone with a random object from the slapdata file, specified via settings->file->slapdata
-anyone  | bitchslap        | slap someone with a Banzai item, specified via the file set in settings->file->slapbanzai
 anyone  | bvzm             | this command by itself shows an error message
 anyone  | fchk             | check your flags with the bot
 anyone  | whoami           | see your nick, userhost, and handle as seen by the bot
