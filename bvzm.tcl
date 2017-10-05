@@ -304,6 +304,7 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00311 $delay \00303seconds!\003"
 				utimer $delay bvzm::weed::pack:go
 				}
+			}
 		}
 		proc pack:go {} {
 			global wchan
