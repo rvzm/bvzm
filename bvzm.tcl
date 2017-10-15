@@ -32,7 +32,6 @@ namespace eval bvzm {
 		# Owner Commands
 		bind pub m ${bvzm::settings::gen::controller} bvzm::procs::control
 		bind pub m ${bvzm::settings::gen::pubtrig}exec bvzm::procs::exec
-		bind msg m ${bvzm::settings::gen::pubtrig}serv bvzm::procs::serv
 		# DCC Commands
 		bind dcc - dccts bvzm::dccts::go
 		# Autos
@@ -113,17 +112,12 @@ namespace eval bvzm {
 			putserv "PRIVMSG $chan :incoming status update...";
 			set hostname [exec hostname]
 			set commandfound 0;
-			set fp [open "| uptime"]
-			set data [read $fp]
-			if {[catch {close $fp} err]} {
-			putserv "PRIVMSG $chan :Error getting status..."
-			} else {
+			set data [exec uptime]
 			set output [split $data "\n"]
 			foreach line $output {
 				putserv "PRIVMSG $chan :${line}"
 				}
 			}
-		}
 		proc exec {nick uhost hand chan text} {
 			set fp [open "| $text"]
 			set data [read $fp]
@@ -135,9 +129,7 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan :${line}"
 				}
 			}
-		}
-				
-
+		}	
 		proc whoami {nick uhost hand chan text} {
 			putserv "PRIVMSG $chan :You are $nick \[$uhost\] - According to my system, your handle is $hand"; return
 		}
@@ -220,8 +212,8 @@ namespace eval bvzm {
 				flushmode $chan
 			}
 		}
-		# Utility procs
 	}
+	# Utility procs
 	namespace eval util {
 		# massvoice
 		proc massvoice { chan } {
