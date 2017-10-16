@@ -23,8 +23,8 @@ namespace eval bvzm {
 		namespace eval weed {
 			variable packdefault "60"
 		}
-		namespace eval greet {
-			variable dir "gdata"
+		namespace eval dir {
+			variable greet "gdata"
 		}
 		namespace eval flags {
 			# you should remove this...

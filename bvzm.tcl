@@ -341,8 +341,8 @@ namespace eval bvzm {
 	}
 	# Greet System
 	namespace eval greet {
-		if {![file exists $bvzm::settings::greet::dir]} {
-			file mkdir $bvzm::settings::greet::dir
+		if {![file exists $bvzm::settings::dir::greet]} {
+			file mkdir $bvzm::settings::dir::greet
 		}
 		proc go {nick uhost hand chan arg} {
 			set txt [split $arg]
