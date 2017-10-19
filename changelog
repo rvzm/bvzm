@@ -6,6 +6,9 @@
 # or edited. Only additions will be
 # made to this file.
 
+v0.4.9
+ - changed greet/dir settings back to pre-0.4.7
+
 v0.4.8
  - added missing close brace
 
