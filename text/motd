@@ -1,0 +1,16 @@
+Connected to %B, running %V
+ _                        
+| |                       
+| |____   _______ __ ___  
+| '_ \ \ / /_  / '_ ` _ \ 
+| |_) \ V / / /| | | | | |
+|_.__/ \_/ /___|_| |_| |_|
+
+Hello %b%N!%b - My name is %b%B%b and I am running %b%V%b, on %b%U%b.
+
+Local time is now %b%T%b
+
+Use %b.help%b for basic help.
+Use %b.help <command>%b for help on a specific command.
+Use %b.help all%b to get a full command list.
+Use %b.help *somestring*%b to list any help texts containing "somestring".

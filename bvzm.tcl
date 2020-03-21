@@ -363,8 +363,8 @@ namespace eval bvzm {
 	# dccts mechanism
 	namespace eval dccts {
 		proc go {hand idx text} {
-			if {$bvzm::settings::dccts::mode == "0"} { putdcc $idx "dcctc is currently disabled"; return }
 			if {![matchattr $hand [reqflag]]} { putdcc $idx "You are not authorized to use dccts"; return}
+			if {$bvzm::settings::dccts::mode == "0"} { putdcc $idx "dcctc is currently disabled"; return }
 			if {$bvzm::settings::dccts::mode == "1"} {
 				if {[lindex [split $text] 0] == ""} { putlog "for help use \'dcctc help\'"; return }
 				set v1 [lindex [split $text] 0]
