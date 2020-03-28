@@ -1,4 +1,4 @@
-# bvzm.tcl \- version 0.4.9
+# bvzm.tcl \- version 0.5
 
 
 ## Basic Information
@@ -23,15 +23,8 @@ anyone  | bvzm             | this command by itself shows an error message
 anyone  | fchk             | check your flags with the bot
 anyone  | whoami           | see your nick, userhost, and handle as seen by the bot
 anyone  | version          | full version reply
-### Weed package commands
-Who     | Command    | Function
---------|------------|----------
-anyone  | pack       | tells the bot to prepare the channel for a "chan-wide toke-out"
-anyone  | bong       | pass a bong to yourself or someone else
-anyone  | pipe       | pass a pipe to yourself or someone else
-anyone  | joint      | pass a joint to yourself or someone else
-anyone  | dab        | prepare a dab, then pass it to yourself or someone else
-anyone  | weed       | show info about the weed package
+anyone  | pack             | tells the bot to prepare the channel for a "chan-wide toke-out"
+
 ### friend commands
 Who     | Command    | Function
 --------|------------|----------
@@ -68,6 +61,7 @@ restart    | restart the bot
 die        | kill the bot :(
 nsauth     | have the bot authenticate itself to NickServ - change the settings->gen->npass value to what you wish the bot to use
 register   | have the bot register itself with NickServ - change settings->gen->npass and settings->gen->email to the desired values
+group      | have the bot group itself to a specified nick with NickServ - change settings->gen->group->nick and settings->gen->group->pass
 rehash     | rehash the bot
 
 ## DCC Commands

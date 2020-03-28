@@ -6,6 +6,13 @@
 # or edited. Only additions will be
 # made to this file.
 
+V0.5
+ - cleaned up dccts some
+ - added text/motd
+ - added bvzm NickServ group via nick for controller
+ - removed most of the silly "weed package"
+ - cleaned up bvzm::main
+
 v0.4.9
  - changed greet/dir settings back to pre-0.4.7
 

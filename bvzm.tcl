@@ -1,9 +1,9 @@
-# ##################################################
-# ### bvzm.tcl - bvzm tool file ####################
-# ### Coded by rvzm             ####################
-# ### ------------------------- ####################
-# ### Version: 0.4.6            ####################
-# ##################################################
+# ################################################## ---------------------------
+# ### bvzm.tcl - bvzm tool file #################### --- ******************* ---
+# ### Coded by rvzm             #################### --- ################### ---
+# ### ------------------------- #################### --- !DEVELOPER EDITION! ---             
+# ### Version: 0.5              #################### --- I MAY CONTAIN BUGS! ---
+# ################################################## ---------------------------
 if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
 	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
 }
@@ -16,12 +16,7 @@ namespace eval bvzm {
 		bind pub - ${bvzm::settings::gen::pubtrig}fchk bvzm::procs::flagcheck
 		bind pub - ${bvzm::settings::gen::pubtrig}whoami bvzm::procs::whoami
 		bind pub - ${bvzm::settings::gen::pubtrig}version bvzm::procs::version
-		# weed commands
 		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
-		bind pub - ${bvzm::settings::gen::pubtrig}bong bvzm::weed::bong
-		bind pub - ${bvzm::settings::gen::pubtrig}pipe bvzm::weed::pipe
-		bind pub - ${bvzm::settings::gen::pubtrig}joint bvzm::weed::joint
-		bind pub - ${bvzm::settings::gen::pubtrig}dab bvzm::weed::dab
 		bind pub - ${bvzm::settings::gen::pubtrig}weed bvzm::weed::info
 		# Friendly commands
 		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::rollcall
@@ -58,13 +53,7 @@ namespace eval bvzm {
 				if {$v2 == "fchk"} { putserv "PRIVMSG $chan :command help for 'fchk' - check what flags you have, or if you are registered with me"; return }
 				if {$v2 == "rollcall"} { putserv "PRIVMSG $chan :command help for 'rollcall' - reqs: friend flag | does a roll call, listing all nicks in channel"; return }
 				if {$v2 == "uptime"} { putserv "PRIVMSG $chan :command help for 'uptime' - reqs: friend flag | displays my current uptime"; return }
-				# weed commands
 				if {$v2 == "pack"} { putserv "PRIVMSG $chan :command help for 'pack' - options: \[duration\] | pack a bowl, optionally you may specify how long to wait"; return }
-				if {$v2 == "bong"} { putserv "PRIVMSG $chan :command help for 'bong' - options: \[nick\] | pack a bong and pass it to either yourself or someone else"; return }
-				if {$v2 == "pipe"} { putserv "PRIVMSG $chan :command help for 'pipe' - options: \[nick\] | pack a pipe and pass it to either yourself or someone else"; return }
-				if {$v2 == "joint"} { putserv "PRIVMSG $chan :command help for 'joint' - options: \[nick\] | roll a joint and pass it to either yourself or someone else"; return }
-				if {$v2 == "dab"} { putserv "PRIVMSG $chan :command help for 'dab' - otions: \[nick\] | prepare a dab for yourself or someone else"; return }
-				if {$v2 == "weed"} { putserv "PRIVMSG $chan :command help for 'weed' - show information about the weed package"; return }
 				}
 			if {$v1 == "info"} {
 				putserv "PRIVMSG $chan :bvzm.tcl (version $bvzm::settings::version) - bvzm tool file ~ Coded by rvzm"; return
@@ -72,8 +61,8 @@ namespace eval bvzm {
 			if {$v1 == "commands"} {
 				putserv "PRIVMSG $chan :bvzm commands | legend - \[flag\]command";
 				putserv "PRIVMSG $chan :flags: - anyone, f friend, -|o chanop, m master"
-				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[f\]rollcall \[f\]uptime"
-				putserv "PRIVMSG $chan :weed package \[-\] - pack, bong, pipe, joint, dab, weed"
+				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[-\]whoami \[f\]uptime"
+				putserv "PRIVMSG $CHAN :\[-\]version \[-\]pack \[f\]rollcall \[-|o\]b \[m\]e"
 			}
 		}
 		proc rollcall {nick uhost hand chan text} {
@@ -160,7 +149,7 @@ namespace eval bvzm {
 				global gchan knick
 				set gchan $chan
 				set knick $msg
-				utimer 5 bvzm::procs::e:gtfo
+				utimer 5 bvzm::procs::e:kick $chan $nick
 			}
 			if {$cmd == "mode"} { putserv "MODE $chan $msg"; return }
 			if {$cmd == "wotd"} { set wdb wotd; bvzm::util::write_db $wdb $msg; putserv "PRIVMSG $chan :Word of the Day updated - $msg" }
@@ -197,12 +186,14 @@ namespace eval bvzm {
 			if {$v1 == "rehash"} { rehash; putserv "PRIVMSG $chan :Rehashing configuration file"; return }
 			if {$v1 == "restart"} { restart; return }
 			if {$v1 == "die"} { die; return }
-			if {$v1 == "register"} { putserv "PRIVMSG NickServ :REGISTER [bvzm::util::getPass] [bvzm::util::getEmail]"}
+			if {$v1 == "register"} { putserv "PRIVMSG NickServ :REGISTER [bvzm::util::getPass] [bvzm::util::getEmail]"; return }
+			if {$v1 == "group"} { putserv "PRIVMSG NickServ :GROUP [bvzm::util::getGroupNick] [bvzm::util::getGroupPass]"; return }
 			if {$v1 == "nsauth"} {
 				putserv "PRIVMSG NickServ :ID [bvzm::util::getPass]";
 				putserv "PRIVMSG $chan :Authed to NickServ";
 				return;
 			}
+		
 		}
 		# Autos procs
 		proc autovoice {nick host hand chan} {
@@ -270,11 +261,20 @@ namespace eval bvzm {
 			global bvzm::settings::gen::email
 			return $bvzm::settings::gen::email
 		}
+		proc getGroupNick {} {
+			global bvzm::settings::gen:gnick
+			return $bvzm::settings::gen::gnick
+		}
+		proc getGroupPass {} {
+			global bvzm::settings::gen::npass
+			return $bvzm::settings::gen::npass
+		}
 		proc homechan {} {
 			global bvzm::settings::gen::homechan
 			return $bvzm::settings::gen::homechan
 		}
 		proc act {chan text} { putserv "PRIVMSG $chan \01ACTION $text\01"; }
+	}
 	# weed package
 	namespace eval weed {
 		proc pack {nick uhost hand chan text} {
@@ -297,7 +297,6 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00311 $delay \00303seconds!\003"
 				utimer $delay bvzm::weed::pack:go
 			}
-		}
 		proc pack:go {} {
 			global wchan
 			putserv "PRIVMSG $wchan :\00303::\003045\00303:";
@@ -306,37 +305,6 @@ namespace eval bvzm {
 			putserv "PRIVMSG $wchan :\00303::\003042\00303:";
 			putserv "PRIVMSG $wchan :\00303::\003041\00303:";
 			putserv "PRIVMSG $wchan :\00303::\00311\002SYNCRONIZED!\002 \00304FIRE THEM BOWLS UP!!!"; return
-		}
-		proc bong {nick uhost hand chan text} {
-			set v1 [lindex [split $text] 0]
-			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION passes the bong to $nick\01" } else { if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return } else { putserv "PRIVMSG $chan :\01ACTION passes the bong to $v1\01"} }
-			putserv "PRIVMSG $chan :Lets make some bubbles!"
-			return
-		}
-		proc pipe {nick uhost hand chan text} {
-			set v1 [lindex [split $text] 0]
-			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION passes the pipe to $nick\01" } else { if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return } else { putserv "PRIVMSG $chan :\01ACTION passes the pipe to $v1\01"} }
-			putserv "PRIVMSG $chan :Ride the Dragon bro!"
-			return
-		}
-		proc joint {nick uhost hand chan text} {
-			set v1 [lindex [split $text] 0]
-			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION rolls a joint and passes to $nick\01" } else { if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return } else { putserv "PRIVMSG $chan :\01ACTION rolls a joint and passes to $v1\01"} }
-			putserv "PRIVMSG $chan :Puff Puff Pass!"
-			return
-		}
-		proc dab {nick uhost hand chan text} {
-			set v1 [lindex [split $text] 0]
-			if {$v1 == ""} { putserv "PRIVMSG $chan :\01ACTION readies the nail and hands the rig to $nick\01" } else {  if {[onchan $v1 $chan] == "0"} { putserv "PRIVMSG $chan :Error! $v1 is not in the channel!"; return } else {putserv "PRIVMSG $chan :\01ACTION readies the nail and hands the rig to $v1\01"} }
-			putserv "PRIVMSG $chan :Take a dab broski!"
-			return
-		}
-		proc info {nick uhost hand chan text} {
-			set v1 [lindex [split $text] 0]
-			if {$v1 == ""} {
-				putserv "PRIVMSG $chan :welcome to the bvzm weed package."
-				putserv "PRIVMSG $chan :weed package ideas came from both LayneStaley and rvzm | code by rvzm | dab option brought to you by LayneStaley"
-			}
 		}
 	}
 	# Greet System
