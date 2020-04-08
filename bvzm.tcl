@@ -183,6 +183,7 @@ namespace eval bvzm {
 			set v1 [lindex [split $text] 0]
 			set v2 [lindex [split $text] 1]
 			putcmdlog "*** bvzm controller - $nick has issued a command: $text"
+			if ($v1 == "help") { putserv "NOTICE $nick :bvzm controll commands: rehash restart die"; putserv "NOTICE $nick :bvzm nickserv commands: nsauth group register"; return }
 			if {$v1 == "rehash"} { rehash; putserv "PRIVMSG $chan :Rehashing configuration file"; return }
 			if {$v1 == "restart"} { restart; return }
 			if {$v1 == "die"} { die; return }
