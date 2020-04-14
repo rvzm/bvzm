@@ -60,9 +60,10 @@ namespace eval bvzm {
 			}
 			if {$v1 == "commands"} {
 				putserv "PRIVMSG $chan :bvzm commands | legend - \[flag\]command";
-				putserv "PRIVMSG $chan :flags: - anyone, f friend, -|o chanop, m master"
+				putserv "PRIVMSG $chan :flags: - anyone, f friend, o chanop, m master"
 				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[-\]whoami \[f\]uptime"
-				putserv "PRIVMSG $CHAN :\[-\]version \[-\]pack \[f\]rollcall \[-|o\]b \[m\]e"
+				putserv "PRIVMSG $chan :\[-\]version \[-\]pack \[f\]rollcall \[-\]bvzm \[m\]e"
+				if {[matchattr $hand n] == "1"} { putserv "NOTICE $nick :As an owner, you can also use the '${bvzm::settings::gen::controller}' control command"; }
 			}
 		}
 		proc rollcall {nick uhost hand chan text} {
@@ -132,24 +133,24 @@ namespace eval bvzm {
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [lrange $txt 1 end]
 			if {$cmd == "op"} {
-				if {$msg == ""} { putserv "MODE $chan +o $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan +o $msg" } }
-			}
+				if {$msg == ""} { putserv "MODE $chan +o $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan +o $msg" } } 
+				}
 			if {$cmd == "deop"} {
 				if {$msg == ""} { putserv "MODE $chan -o $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan -o $msg" } }
-			}
+				}
 			if {$cmd == "voice"} {
 				if {$msg == ""} { putserv "MODE $chan +v $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan +v $msg" } }
-			}
+				}
 			if {$cmd == "devoice"} {
 				if {$msg == ""} { putserv "MODE $chan -v $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan -v $msg" } }
-			}
+				}
 			if {$cmd == "remove"} {
 				if {![onchan $msg $chan]} { putserv "PRIVMSG $chan :Error - $msg not on chan"; return }
-				putserv "PRIVMSG $chan :$msg - you have 5 seconds to leave, or you will be removed."
+				putserv "PRIVMSG $chan :$msg - you have 10 seconds to leave, or you will be removed."
 				global gchan knick
 				set gchan $chan
 				set knick $msg
-				utimer 5 bvzm::procs::e:kick $chan $nick
+				utimer 10 bvzm::procs::e:kick $chan $nick
 			}
 			if {$cmd == "mode"} { putserv "MODE $chan $msg"; return }
 			if {$cmd == "wotd"} { set wdb wotd; bvzm::util::write_db $wdb $msg; putserv "PRIVMSG $chan :Word of the Day updated - $msg" }
@@ -183,10 +184,27 @@ namespace eval bvzm {
 			set v1 [lindex [split $text] 0]
 			set v2 [lindex [split $text] 1]
 			putcmdlog "*** bvzm controller - $nick has issued a command: $text"
-			if ($v1 == "help") { putserv "NOTICE $nick :bvzm controll commands: rehash restart die"; putserv "NOTICE $nick :bvzm nickserv commands: nsauth group register"; return }
-			if {$v1 == "rehash"} { rehash; putserv "PRIVMSG $chan :Rehashing configuration file"; return }
+			if {$v1 == "help"} {
+				if {$v2 == "rehash"} { putserv "NOTICE $nick :bvzm command 'rehash' - rehashes bvzm conf and script files"; return }
+				if {$v2 == "restart"} { putserv "NOTICE $nick :bvzm command 'restart' - restarts bvzm bot"; return }
+				if {$v2 == "die"} { putserv "NOTICE $nick :bvzm command 'die' - forces bvzm bot to shut down"; return }
+				if {$v2 == "info"} { putserv "NOTICE $nick :bvzm command 'info' - displays current version information to channel"; return }
+				if {$v2 == "register"} { putserv "NOTICE $nick :bvzm command 'register' - registers bvzm with the 'npass' and 'email' settings to nickserv"; return }
+				if {$v2 == "group"} { putserv "NOTICE $nick :bvzm command 'group' - uses nickserv to group bvzm with the nick provided in the 'gnick' setting"; return }
+				if {$v2 == "nsauth"} { putserv "NOTICE $nick :bvzm command 'nsauth' - forces bvzm to identify with nickserv using the 'npass' setting"; return }
+				putserv "NOTICE $nick :bvzm controll commands - rehash restart die";
+				putserv "NOTICE $nick :bvzm nickserv commands - nsauth group register";
+				return
+				}
+			if {$v1 == "rehash"} {
+				putserv "PRIVMSG $chan :Reloading configuration..."; 
+				rehash;
+				putserv "PRIVMSG $chan :Configuration file reloaded";
+				return
+				}
 			if {$v1 == "restart"} { restart; return }
 			if {$v1 == "die"} { die; return }
+			if {$v1 == "info"} { putserv "PRIVMSG $chan :bvzm.tcl running version [bvzm::util::getVersion]"; return }
 			if {$v1 == "register"} { putserv "PRIVMSG NickServ :REGISTER [bvzm::util::getPass] [bvzm::util::getEmail]"; return }
 			if {$v1 == "group"} { putserv "PRIVMSG NickServ :GROUP [bvzm::util::getGroupNick] [bvzm::util::getGroupPass]"; return }
 			if {$v1 == "nsauth"} {
@@ -194,7 +212,6 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan :Authed to NickServ";
 				return;
 			}
-		
 		}
 		# Autos procs
 		proc autovoice {nick host hand chan} {
@@ -335,7 +352,7 @@ namespace eval bvzm {
 			if {![matchattr $hand [reqflag]]} { putdcc $idx "You are not authorized to use dccts"; return}
 			if {$bvzm::settings::dccts::mode == "0"} { putdcc $idx "dcctc is currently disabled"; return }
 			if {$bvzm::settings::dccts::mode == "1"} {
-				if {[lindex [split $text] 0] == ""} { putlog "for help use \'dcctc help\'"; return }
+				if {[lindex [split $text] 0] == ""} { putlog "for help use 'dcctc help\'"; return }
 				set v1 [lindex [split $text] 0]
 					if {$v1 == "1"} { set chan [dccts1] }
 					if {$v1 == "2"} { set chan [dccts2] }
