@@ -183,7 +183,7 @@ namespace eval bvzm {
 		proc control {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
 			set v2 [lindex [split $text] 1]
-			putcmdlog "*** bvzm controller - $nick has issued a command: $text"
+			putcmdlog "*** bvzm controller $nick - $text"
 			if {$v1 == "help"} {
 				if {$v2 == "rehash"} { putserv "NOTICE $nick :bvzm command 'rehash' - rehashes bvzm conf and script files"; return }
 				if {$v2 == "restart"} { putserv "NOTICE $nick :bvzm command 'restart' - restarts bvzm bot"; return }
