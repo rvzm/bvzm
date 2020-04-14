@@ -12,6 +12,8 @@ V0.5
  - added bvzm NickServ group via nick for controller
  - removed most of the silly "weed package"
  - cleaned up bvzm::main
+ - added help command and subcommands to bvzm controller
+ - changed bvzm:e kick to a 10 second timer
 
 v0.4.9
  - changed greet/dir settings back to pre-0.4.7
