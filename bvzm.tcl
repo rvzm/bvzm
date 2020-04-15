@@ -182,19 +182,38 @@ namespace eval bvzm {
 		proc control {nick uhost hand chan text} {
 			set v1 [lindex [split $text] 0]
 			set v2 [lindex [split $text] 1]
-			putcmdlog "*** bvzm controller - $nick has issued a command: $text"
-			if ($v1 == "help") { putserv "NOTICE $nick :bvzm controll commands: rehash restart die"; putserv "NOTICE $nick :bvzm nickserv commands: nsauth group register"; return }
-			if {$v1 == "rehash"} { rehash; putserv "PRIVMSG $chan :Rehashing configuration file"; return }
+			putcmdlog "*** bvzm controller $nick - $text"
+			if {$v1 == "help"} {
+				if {$v2 == "rehash"} { putserv "NOTICE $nick :bvzm command 'rehash' - rehashes bvzm conf and script files"; return }
+				if {$v2 == "restart"} { putserv "NOTICE $nick :bvzm command 'restart' - restarts bvzm bot"; return }
+				if {$v2 == "die"} { putserv "NOTICE $nick :bvzm command 'die' - forces bvzm bot to shut down"; return }
+				if {$v2 == "info"} { putserv "NOTICE $nick :bvzm command 'info' - displays current version information to channel"; return }
+				if {$v2 == "register"} { putserv "NOTICE $nick :bvzm command 'register' - registers bvzm with the 'npass' and 'email' settings to nickserv"; return }
+				if {$v2 == "group"} { putserv "NOTICE $nick :bvzm command 'group' - uses nickserv to group bvzm with the nick provided in the 'gnick' setting"; return }
+				if {$v2 == "nsauth"} { putserv "NOTICE $nick :bvzm command 'nsauth' - forces bvzm to identify with nickserv using the 'npass' setting"; return }
+				if {$v2 == ""} {
+					putserv "NOTICE $nick :bvzm controll commands - rehash restart die"
+					putserv "NOTICE $nick :bvzm nickserv commands - nsauth group register"
+					return
+					}
+				putcmdlog "*** bvzm controller $nick - help command error - no if statement triggered"
+				}
+			if {$v1 == "rehash"} {
+				putserv "PRIVMSG $chan :Reloading configuration..."; 
+				rehash;
+				putserv "PRIVMSG $chan :Configuration file reloaded";
+				return
+				}
 			if {$v1 == "restart"} { restart; return }
 			if {$v1 == "die"} { die; return }
+			if {$v1 == "info"} { putserv "PRIVMSG $chan :bvzm.tcl running version [bvzm::util::getVersion]"; return }
 			if {$v1 == "register"} { putserv "PRIVMSG NickServ :REGISTER [bvzm::util::getPass] [bvzm::util::getEmail]"; return }
-			if {$v1 == "group"} { putserv "PRIVMSG NickServ :GROUP [bvzm::util::getGroupNick] [bvzm::util::getGroupPass]"; return }
+			if {$v1 == "group"} { putserv "PRIVMSG NickServ :GROUP [bvzm::util::getGroupNick] [bvzm::util::getPass]"; return }
 			if {$v1 == "nsauth"} {
 				putserv "PRIVMSG NickServ :ID [bvzm::util::getPass]";
 				putserv "PRIVMSG $chan :Authed to NickServ";
 				return;
 			}
-		
 		}
 		# Autos procs
 		proc autovoice {nick host hand chan} {
