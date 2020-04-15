@@ -132,24 +132,24 @@ namespace eval bvzm {
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [lrange $txt 1 end]
 			if {$cmd == "op"} {
-				if {$msg == ""} { putserv "MODE $chan +o $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan +o $msg" } }
-			}
+				if {$msg == ""} { putserv "MODE $chan +o $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan +o $msg" } } 
+				}
 			if {$cmd == "deop"} {
 				if {$msg == ""} { putserv "MODE $chan -o $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan -o $msg" } }
-			}
+				}
 			if {$cmd == "voice"} {
 				if {$msg == ""} { putserv "MODE $chan +v $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan +v $msg" } }
-			}
+				}
 			if {$cmd == "devoice"} {
 				if {$msg == ""} { putserv "MODE $chan -v $nick"; return } else { if {[onchan $msg $chan]} { putserv "MODE $chan -v $msg" } }
-			}
+				}
 			if {$cmd == "remove"} {
 				if {![onchan $msg $chan]} { putserv "PRIVMSG $chan :Error - $msg not on chan"; return }
-				putserv "PRIVMSG $chan :$msg - you have 5 seconds to leave, or you will be removed."
+				putserv "PRIVMSG $chan :$msg - you have 10 seconds to leave, or you will be removed."
 				global gchan knick
 				set gchan $chan
 				set knick $msg
-				utimer 5 bvzm::procs::e:kick $chan $nick
+				utimer 10 bvzm::procs::e:kick $chan $nick
 			}
 			if {$cmd == "mode"} { putserv "MODE $chan $msg"; return }
 			if {$cmd == "wotd"} { set wdb wotd; bvzm::util::write_db $wdb $msg; putserv "PRIVMSG $chan :Word of the Day updated - $msg" }
