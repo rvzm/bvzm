@@ -60,9 +60,10 @@ namespace eval bvzm {
 			}
 			if {$v1 == "commands"} {
 				putserv "PRIVMSG $chan :bvzm commands | legend - \[flag\]command";
-				putserv "PRIVMSG $chan :flags: - anyone, f friend, -|o chanop, m master"
+				putserv "PRIVMSG $chan :flags: - anyone, f friend, o chanop, m master"
 				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[-\]whoami \[f\]uptime"
-				putserv "PRIVMSG $CHAN :\[-\]version \[-\]pack \[f\]rollcall \[-|o\]b \[m\]e"
+				putserv "PRIVMSG $chan :\[-\]version \[-\]pack \[f\]rollcall \[-\]bvzm \[m\]e"
+				if {[matchattr $hand n] == "1"} { putserv "NOTICE $nick :As an owner, you can also use the '${bvzm::settings::gen::controller}' control command"; }
 			}
 		}
 		proc rollcall {nick uhost hand chan text} {
