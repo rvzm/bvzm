@@ -2,14 +2,18 @@
 
 
 ## Basic Information
-This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.2
+This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.4
 Currently requires no extra packages to be installed.
 
 ## 'text' Directory
-This folder contains a modified motd for bvzm to use.
+This folder contains a modified motd and banner for bvzm to use.
 
 ## Install
-to install bvzm.tcl, clone it to your scripts/ folder, then copy bvzm-settings.tcl.dist to bvzm-settingxs.tcl and edit to your liking.
+to install bvzm.tcl, clone it to your scripts/ folder, then rename bvzm-settings.tcl.dist to bvzm-settingxs.tcl and edit to your liking
+if you want to use the modified text, copy the contents of text/ to your eggdrops text folder
+add 'source scripts/bvzm/bvzm.tcl' to your eggdrops configuration file
+rehash
+done :)
 
 ## Public channel commands
 These commands are used in a channel that the bot is on.
@@ -49,7 +53,6 @@ Subcommand   | Function
 help         | shows basic help
 -> {command} | show command help for a specified command
 info         | shows information about bvzm.tcl to the channel
-commands     | show a list of commands
 
 
 ## Controller
