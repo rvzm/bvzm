@@ -333,14 +333,21 @@ namespace eval bvzm {
 		if {![file exists $bvzm::settings::dir::greet]} {
 			file mkdir $bvzm::settings::dir::greet
 		}
-		proc go {nick uhost hand chan arg} {
-			set txt [split $arg]
+		proc go {nick uhost hand chan text} {
+			set txt [split $text]
 			set cmd [string tolower [lindex $txt 0]]
 			set msg [join [lrange $txt 1 end]]
 			set gdb [string map {/ .} "$bvzm::settings::greet::dir/$nick"]
 			if {$cmd == "set"} {
+				if {$msg == ""} { putserv "PRIVMSG $chan :error - greet message cannot be empty"; return }
 				bvzm::util::write_db $gdb $msg
 				putserv "PRIVMSG $chan :Greet for $nick set";
+			}
+			if {$cmd == "remove"} {
+				set act [rm $bvzm::settings::greet::dir/$nick]
+				if {[catch $act err]} { putserv "PRIVMSG $chan :error - removal failed"; return }
+				putserv "PRIVMSG $chan :greet for $nick removed"
+				return
 			}
 		}
 		proc join {nick uhost hand chan} {
