@@ -11,7 +11,7 @@ namespace eval bvzm {
 	namespace eval binds {
 		# Main Commands
 		bind pub - ${bvzm::settings::gen::pubtrig}bvzm bvzm::procs::bvzm:main
-		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::go
+		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::gtrig
 		bind pub - ${bvzm::settings::gen::pubtrig}regme bvzm::procs::register
 		bind pub - ${bvzm::settings::gen::pubtrig}fchk bvzm::procs::flagcheck
 		bind pub - ${bvzm::settings::gen::pubtrig}whoami bvzm::procs::whoami
@@ -27,11 +27,12 @@ namespace eval bvzm {
 		# Owner Commands
 		bind pub m ${bvzm::settings::gen::controller} bvzm::procs::control
 		bind pub m ${bvzm::settings::gen::pubtrig}exec bvzm::procs::exec
-		# DCC Commands
+		# dccts Commands
+		bind pub - ${bvzm::settings::gen::pubtrig}dccts bvzm::dccts::pubm
 		bind dcc - dccts bvzm::dccts::go
 		# Autos
 		bind join - * bvzm::procs::autovoice
-		bind join - * bvzm::greet::join
+		bind join - * bvzm::greet::chantrigger
 	}
 	namespace eval procs {
 		# Main Command Procs
@@ -225,6 +226,66 @@ namespace eval bvzm {
 			}
 		}
 	}
+		# Greet System
+	namespace eval greet {
+		proc gtrig {nick uhost hand chan text} {
+			if {$bvzm::settings::debug == "1"} { putlog "bvzm-debug\: greet command triggered" }
+			set v1 [lindex [split $text] 0]
+			set txt [split $text]
+			set msg [lrange $txt 1 end]
+			set gdb [string map {/ .} "$bvzm::settings::greet::dir//$nick"]
+			if {$v1 == "set"} {
+				if {$msg == ""} { putserv "PRIVMSG $chan :error - greet message cannot be empty"; return }
+				bvzm::util::write_db $gdb $msg
+				putserv "PRIVMSG $chan :Greet for $nick set";
+			}
+			if {$v1 == "remove"} {
+				set gdb [string map {/ .} "$bvzm::settings::greet::dir//$nick"]
+				set act [open "rm $gdb"]
+				if {[catch $act err]} { putserv "PRIVMSG $chan :error - removal failed"; return }
+				putserv "PRIVMSG $chan :greet for $nick removed"
+				return
+			}
+		}
+		proc chantrigger {nick uhost hand chan} {
+			if {$bvzm::settings::debug == "1"} { putlog "bvzm-debug\: greet join triggered on $chan" }
+			if {![channel get $chan greet]} { return }
+			if {![onchan $nick $chan]} { return }
+			set file [string map {/ .} $bvzm::settings::greet::dir/$nick]
+			if {[file exists $file]} { putserv "PRIVMSG $chan :\[$nick\] - [bvzm::util::read_db $file]"}
+		}
+	}
+	namespace eval weed {
+		proc pack {nick uhost hand chan text} {
+				global wchan
+				set wchan $chan
+				if {[lindex [split $text] 0] != ""} {
+					if {[scan $text "%d%1s" count type] != 2} {
+						putserv "PRIVMSG $chan :error - pack"
+						return
+					}
+					switch -- $type {
+						"s" { set delay $count }
+						"m" { set delay [expr {$count * 60}] }
+						"h" { set delay [expr {$count * 60 * 60}] }
+						default {
+							return
+						}
+					}
+				} else { set delay $bvzm::settings::weed::packdefault }
+				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00311 $delay \00303seconds!\003"
+				utimer $delay bvzm::weed::pack:go
+			}
+		proc pack:go {} {
+			global wchan
+			putserv "PRIVMSG $wchan :\00303::\003045\00303:";
+			putserv "PRIVMSG $wchan :\00303::\003044\00303:";
+			putserv "PRIVMSG $wchan :\00303::\003043\00303:";
+			putserv "PRIVMSG $wchan :\00303::\003042\00303:";
+			putserv "PRIVMSG $wchan :\00303::\003041\00303:";
+			putserv "PRIVMSG $wchan :\00303::\00311\002SYNCRONIZED!\002 \00304FIRE THEM BOWLS UP!!!"; return
+		}
+	}
 	# Utility procs
 	namespace eval util {
 		# massvoice
@@ -296,73 +357,33 @@ namespace eval bvzm {
 		}
 		proc act {chan text} { putserv "PRIVMSG $chan \01ACTION $text\01"; }
 	}
-	# weed package
-	namespace eval weed {
-		proc pack {nick uhost hand chan text} {
-				global wchan
-				set wchan $chan
-				if {[lindex [split $text] 0] != ""} {
-					if {[scan $text "%d%1s" count type] != 2} {
-						putserv "PRIVMSG $chan :error - pack"
-						return
-					}
-					switch -- $type {
-						"s" { set delay $count }
-						"m" { set delay [expr {$count * 60}] }
-						"h" { set delay [expr {$count * 60 * 60}] }
-						default {
-							return
-						}
-					}
-				} else { set delay $bvzm::settings::weed::packdefault }
-				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00311 $delay \00303seconds!\003"
-				utimer $delay bvzm::weed::pack:go
-			}
-		proc pack:go {} {
-			global wchan
-			putserv "PRIVMSG $wchan :\00303::\003045\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003044\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003043\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003042\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003041\00303:";
-			putserv "PRIVMSG $wchan :\00303::\00311\002SYNCRONIZED!\002 \00304FIRE THEM BOWLS UP!!!"; return
-		}
-	}
-	# Greet System
-	namespace eval greet {
-		if {![file exists $bvzm::settings::dir::greet]} {
-			file mkdir $bvzm::settings::dir::greet
-		}
-		proc go {nick uhost hand chan text} {
-			set txt [split $text]
-			set cmd [string tolower [lindex $txt 0]]
-			set msg [join [lrange $txt 1 end]]
-			set gdb [string map {/ .} "$bvzm::settings::greet::dir/$nick"]
-			if {$cmd == "set"} {
-				if {$msg == ""} { putserv "PRIVMSG $chan :error - greet message cannot be empty"; return }
-				bvzm::util::write_db $gdb $msg
-				putserv "PRIVMSG $chan :Greet for $nick set";
-			}
-			if {$cmd == "remove"} {
-				set act [rm $bvzm::settings::greet::dir/$nick]
-				if {[catch $act err]} { putserv "PRIVMSG $chan :error - removal failed"; return }
-				putserv "PRIVMSG $chan :greet for $nick removed"
-				return
-			}
-		}
-		proc join {nick uhost hand chan} {
-			if {![channel get $chan greet]} {return}
-			set file [string map {/ .} $bvzm::settings::greet::dir/$nick]
-			if {[file exists $file]} { putserv "PRIVMSG $chan :\[$nick\] - [bvzm::util::read_db $file]"}
-		}
-	}
 	# dccts mechanism
 	namespace eval dccts {
+		proc pubm {nick uhost hand chan text} {
+			set v1 [lindex [split $text] 0]
+			set msg [string trim $text $v1]
+			if {$v1 == "info"} {
+				putserv "PRIVMSG $chan :bvzm tool file DCC-to-Server system";
+				putserv "PRIVMSG $chan :currently at version $bvzm::settings::dccts::version";
+				return;
+			}
+			if {$v1 == "ischan"} {
+				if {$chan == [dccts1]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 1"; return }
+				if {$chan == [dccts2]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 2"; return }
+				if {$chan == [dccts3]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 3"; return }
+				if {$chan == [dccts4]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 4"; return }
+				if {$chan == [dccts5]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 5"; return }
+				putserv "PRIVMSG $chan :This channel is NOT a dccts channel";
+				return;
+			}
+			putserv "PRIVMSG $chan :\[dccts\] for info use 'dccts info' and for channel checking is 'dccts ischan'";
+			return;
+		}
 		proc go {hand idx text} {
 			if {![matchattr $hand [reqflag]]} { putdcc $idx "You are not authorized to use dccts"; return}
-			if {$bvzm::settings::dccts::mode == "0"} { putdcc $idx "dcctc is currently disabled"; return }
+			if {$bvzm::settings::dccts::mode == "0"} { putdcc $idx "dccts is currently disabled"; return }
 			if {$bvzm::settings::dccts::mode == "1"} {
-				if {[lindex [split $text] 0] == ""} { putlog "for help use \'dcctc help\'"; return }
+				if {[lindex [split $text] 0] == ""} { putlog "for help use 'dccts help'"; return }
 				set v1 [lindex [split $text] 0]
 					if {$v1 == "1"} { set chan [dccts1] }
 					if {$v1 == "2"} { set chan [dccts2] }
@@ -370,7 +391,7 @@ namespace eval bvzm {
 					if {$v1 == "4"} { set chan [dccts4] }
 					if {$v1 == "5"} { set chan [dccts5] }
 					if {$v1 == "help"} {
-						putdcc $idx "Welcome to the dcctc system.";
+						putdcc $idx "Welcome to the dccts system.";
 						putdcc $idx "To use, issue the command 'dccts \[#\] <text>'"
 						putdcc $idx "where # is the channel number"
 						putdcc $idx "For Channel list, use 'dccts chanlist'"
@@ -386,9 +407,9 @@ namespace eval bvzm {
 						return
 					}
 				set v2 [string trim $text $v1]
-				putserv "PRIVMSG $chan :\[$hand @ bvzm\] $v2";
+				putserv "PRIVMSG $chan :\[dccts\]\[$hand @ bvzm\] $v2";
 				putlog "\[$hand->$chan\] $v2"
-			} else { putdcc $idx "Error - Invalid dcctc mode option" }
+			} else { putdcc $idx "Error - Invalid dccts mode option" }
 		}
 		proc reqflag {} {
 			global bvzm::settings::dccts::reqflag
