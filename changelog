@@ -12,6 +12,10 @@ V0.5
  - added bvzm NickServ group via nick for controller
  - removed most of the silly "weed package"
  - cleaned up bvzm::main
+ - updated dccts and added public channel trigger for info of it
+ - cleaned up some
+ - added ability to disable dccts channels
+ - fixed greet system
 
 v0.4.9
  - changed greet/dir settings back to pre-0.4.7
