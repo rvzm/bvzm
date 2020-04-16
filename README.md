@@ -97,3 +97,6 @@ chan2      | dccts channel 2
 chan3      | dccts channel 3
 chan4      | dccts channel 4
 chan5      | dccts channel 5
+
+## Contact
+I can be contacted at irc.gotham.chat in #bvzm, #eggdrop, and #gotham
