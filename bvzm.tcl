@@ -233,15 +233,15 @@ namespace eval bvzm {
 			set v1 [lindex [split $text] 0]
 			set txt [split $text]
 			set msg [lrange $txt 1 end]
-			set gdb [string map {/ .} "$bvzm::settings::greet::dir//$nick"]
+			set gdb "[bvzm::util::greetdir]/$nick"
 			if {$v1 == "set"} {
 				if {$msg == ""} { putserv "PRIVMSG $chan :error - greet message cannot be empty"; return }
 				bvzm::util::write_db $gdb $msg
 				putserv "PRIVMSG $chan :Greet for $nick set";
 			}
 			if {$v1 == "remove"} {
-				set gdb [string map {/ .} "$bvzm::settings::greet::dir//$nick"]
-				set act [open "rm $gdb"]
+				set gdb "[bvzm::util::greetdir]/$nick"
+				set act [exec rm $gdb]
 				if {[catch $act err]} { putserv "PRIVMSG $chan :error - removal failed"; return }
 				putserv "PRIVMSG $chan :greet for $nick removed"
 				return
@@ -251,7 +251,7 @@ namespace eval bvzm {
 			if {$bvzm::settings::debug == "1"} { putlog "bvzm-debug\: greet join triggered on $chan" }
 			if {![channel get $chan greet]} { return }
 			if {![onchan $nick $chan]} { return }
-			set file [string map {/ .} $bvzm::settings::greet::dir/$nick]
+			set file "[bvzm::util::greetdir]/$nick"
 			if {[file exists $file]} { putserv "PRIVMSG $chan :\[$nick\] - [bvzm::util::read_db $file]"}
 		}
 	}
@@ -354,6 +354,10 @@ namespace eval bvzm {
 		proc homechan {} {
 			global bvzm::settings::gen::homechan
 			return $bvzm::settings::gen::homechan
+		}
+		proc greetdir {} {
+			global bvzm::settings::greet::dir
+			return $bvzm::settings::greet::dir
 		}
 		proc act {chan text} { putserv "PRIVMSG $chan \01ACTION $text\01"; }
 	}
