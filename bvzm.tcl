@@ -385,11 +385,11 @@ namespace eval bvzm {
 			if {$bvzm::settings::dccts::mode == "1"} {
 				if {[lindex [split $text] 0] == ""} { putlog "for help use 'dccts help'"; return }
 				set v1 [lindex [split $text] 0]
-					if {$v1 == "1"} { set chan [dccts1] }
-					if {$v1 == "2"} { set chan [dccts2] }
-					if {$v1 == "3"} { set chan [dccts3] }
-					if {$v1 == "4"} { set chan [dccts4] }
-					if {$v1 == "5"} { set chan [dccts5] }
+					if {$v1 == "1"} { if {[dccts1] == "0"} { putdcc $idx "dccts channel 1 is disabled"; return } else { set chan [dccts1] } }
+					if {$v1 == "2"} { if {[dccts2] == "0"} { putdcc $idx "dccts channel 2 is disabled"; return } else { set chan [dccts2] } }
+					if {$v1 == "3"} { if {[dccts3] == "0"} { putdcc $idx "dccts channel 3 is disabled"; return } else { set chan [dccts3] } }
+					if {$v1 == "4"} { if {[dccts4] == "0"} { putdcc $idx "dccts channel 4 is disabled"; return } else { set chan [dccts4] } }
+					if {$v1 == "5"} { if {[dccts5] == "0"} { putdcc $idx "dccts channel 5 is disabled"; return } else { set chan [dccts5] } }
 					if {$v1 == "help"} {
 						putdcc $idx "Welcome to the dccts system.";
 						putdcc $idx "To use, issue the command 'dccts \[#\] <text>'"
@@ -399,11 +399,11 @@ namespace eval bvzm {
 					}
 					if {$v1 == "chanlist"} {
 						putdcc $idx "Channel List"
-						putdcc $idx "Channel 1 - [dccts1]"
-						putdcc $idx "Channel 2 - [dccts2]"
-						putdcc $idx "Channel 3 - [dccts3]"
-						putdcc $idx "Channel 4 - [dccts4]"
-						putdcc $idx "Channel 5 - [dccts5]"
+						if {[dccts1] == "0"} { putdcc $idx "dccts channel 1 is disabled."; } else { putdcc $idx "Channel 1 - [dccts1]" }
+						if {[dccts2] == "0"} { putdcc $idx "dccts channel 2 is disabled."; } else { putdcc $idx "Channel 2 - [dccts2]" }
+						if {[dccts3] == "0"} { putdcc $idx "dccts channel 3 is disabled."; } else { putdcc $idx "Channel 3 - [dccts3]" }
+						if {[dccts4] == "0"} { putdcc $idx "dccts channel 4 is disabled."; } else { putdcc $idx "Channel 4 - [dccts4]" }
+						if {[dccts5] == "0"} { putdcc $idx "dccts channel 5 is disabled."; } else { putdcc $idx "Channel 5 - [dccts5]" }
 						return
 					}
 				set v2 [string trim $text $v1]
