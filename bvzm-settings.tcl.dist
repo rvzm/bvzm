@@ -1,8 +1,8 @@
 namespace eval bvzm {
 	namespace eval settings {
-		variable version "0.4.7"
-		variable build "1040"
-		variable release "r0"
+		variable version "0.5"
+		variable build "0420"
+		variable release "r1"
 		variable debug "0"
 		namespace eval gen {
 			variable pubtrig "@"
