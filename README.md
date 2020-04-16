@@ -23,6 +23,7 @@ anyone  | bvzm             | this command by itself shows an error message
 anyone  | fchk             | check your flags with the bot
 anyone  | whoami           | see your nick, userhost, and handle as seen by the bot
 anyone  | version          | full version reply
+anyone  | dccts            | show info about dccts
 anyone  | pack             | tells the bot to prepare the channel for a "chan-wide toke-out"
 
 ### friend commands
