@@ -18,7 +18,7 @@ The command character is defined by settings->gen->pubtrig
 Who     | Command          | Function
 --------|------------------|----------
 anyone  | regme            | Registers a user into the userfile, if they aren't already in it.
-anyone  | greet            | using 'greet set' will set your greet - requires user to be in userfile.
+anyone  | greet            | using 'greet set' will set your greet - does not require user to be in userfile.
 anyone  | bvzm             | this command by itself shows an error message
 anyone  | fchk             | check your flags with the bot
 anyone  | whoami           | see your nick, userhost, and handle as seen by the bot
