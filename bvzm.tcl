@@ -273,17 +273,17 @@ namespace eval bvzm {
 						}
 					}
 				} else { set delay $bvzm::settings::weed::packdefault }
-				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00304Toke\00311-\00304out\00303 in\00311 $delay \00303seconds!\003"
+				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00315\002Toke\002\00306-\00315\002out\002\00303 in\00311 $delay \00303seconds!\003"
 				utimer $delay bvzm::weed::pack:go
 			}
 		proc pack:go {} {
 			global wchan
-			putserv "PRIVMSG $wchan :\00303::\003045\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003044\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003043\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003042\00303:";
-			putserv "PRIVMSG $wchan :\00303::\003041\00303:";
-			putserv "PRIVMSG $wchan :\00303::\00311\002SYNCRONIZED!\002 \00304FIRE THEM BOWLS UP!!!"; return
+			putserv "PRIVMSG $wchan :\00315::\003035\00315:";
+			putserv "PRIVMSG $wchan :\00315::\003034\00315:";
+			putserv "PRIVMSG $wchan :\00315::\003033\00315:";
+			putserv "PRIVMSG $wchan :\00315::\003032\00315:";
+			putserv "PRIVMSG $wchan :\00315::\003031\00315:";
+			putserv "PRIVMSG $wchan :\00315::\00308\002SYNCRONIZED! \00304Fire Away!\002\00307!\00308\002!"; return
 		}
 	}
 	# Utility procs
