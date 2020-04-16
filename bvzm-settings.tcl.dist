@@ -15,8 +15,10 @@ namespace eval bvzm {
 			variable homechan "#placeholder"
 		}
 		namespace eval dccts {
+			# dccts mode - 1 for enabled, 0 for disabled
 			variable mode "0"
 			variable reqflag "Df"
+			# dccts channels - set to "0" to disable a channel
 			variable chan1 "#chan1"
 			variable chan2 "#chan2"
 			variable chan3 "#chan3"
