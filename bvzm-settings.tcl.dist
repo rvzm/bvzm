@@ -3,6 +3,7 @@ namespace eval bvzm {
 		variable version "0.4.7"
 		variable build "1040"
 		variable release "r0"
+		variable debug "0"
 		namespace eval gen {
 			variable pubtrig "@"
 			variable controller "~bvzm"
@@ -26,6 +27,9 @@ namespace eval bvzm {
 			variable packdefault "60"
 		}
 		namespace eval greet {
+			if {![file exists $bvzm::settings::dir::greet]} {
+				file mkdir $bvzm::settings::dir::greet
+			}
 			variable dir "gdata"
 		}
 		namespace eval flags {
