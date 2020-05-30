@@ -1,12 +1,15 @@
-# bvzm.tcl \- version 0.4.9
+# bvzm.tcl \- version 0.5
 
 
 ## Basic Information
-This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.2
+This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.4
 Currently requires no extra packages to be installed.
 
+## 'text' Directory
+This folder contains a modified motd for bvzm to use.
+
 ## Install
-to install bvzm.tcl, clone it to your scripts/ folder, then copy bvzm-settings.tcl.dist to bvzm-settingxs.tcl and edit to your liking.
+to install bvzm.tcl, clone it to your scripts/ folder, then copy bvzm-settings.tcl.dist to bvzm-settings.tcl and edit to your liking.
 
 ## Public channel commands
 These commands are used in a channel that the bot is on.
@@ -15,20 +18,14 @@ The command character is defined by settings->gen->pubtrig
 Who     | Command          | Function
 --------|------------------|----------
 anyone  | regme            | Registers a user into the userfile, if they aren't already in it.
-anyone  | greet            | using 'greet set' will set your greet - requires user to be in userfile.
+anyone  | greet            | using 'greet set' will set your greet - does not require user to be in userfile.
 anyone  | bvzm             | this command by itself shows an error message
 anyone  | fchk             | check your flags with the bot
 anyone  | whoami           | see your nick, userhost, and handle as seen by the bot
 anyone  | version          | full version reply
-### Weed package commands
-Who     | Command    | Function
---------|------------|----------
-anyone  | pack       | tells the bot to prepare the channel for a "chan-wide toke-out"
-anyone  | bong       | pass a bong to yourself or someone else
-anyone  | pipe       | pass a pipe to yourself or someone else
-anyone  | joint      | pass a joint to yourself or someone else
-anyone  | dab        | prepare a dab, then pass it to yourself or someone else
-anyone  | weed       | show info about the weed package
+anyone  | dccts            | show info about dccts
+anyone  | pack             | tells the bot to prepare the channel for a "chan-wide toke-out"
+
 ### friend commands
 Who     | Command    | Function
 --------|------------|----------
@@ -65,6 +62,7 @@ restart    | restart the bot
 die        | kill the bot :(
 nsauth     | have the bot authenticate itself to NickServ - change the settings->gen->npass value to what you wish the bot to use
 register   | have the bot register itself with NickServ - change settings->gen->npass and settings->gen->email to the desired values
+group      | have the bot group itself to a specified nick with NickServ - change settings->gen->group->nick and settings->gen->group->pass
 rehash     | rehash the bot
 
 ## DCC Commands
@@ -89,6 +87,7 @@ controller | master controll command character
 npass      | NickServ password (used for nsauth and register)
 email      | NickServ registration email (used for register)
 homechan   | where the script will report controller messages
+
 ### dccts (settings->dccts)
 Setting    | Function
 -----------|----------
@@ -99,3 +98,6 @@ chan2      | dccts channel 2
 chan3      | dccts channel 3
 chan4      | dccts channel 4
 chan5      | dccts channel 5
+
+## Contact
+I can be contacted at irc.gotham.chat in #bvzm, #eggdrop, and #gotham

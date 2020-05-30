@@ -1,19 +1,24 @@
 namespace eval bvzm {
 	namespace eval settings {
-		variable version "0.4.7"
-		variable build "1040"
-		variable release "r0"
+		variable version "0.5"
+		variable build "0420"
+		variable release "r1"
+		variable debug "0"
 		namespace eval gen {
 			variable pubtrig "@"
 			variable controller "~bvzm"
 			variable nick "bvzm"
+			# NickServ nick group
+			variable gnick "placeholder"
 			variable npass "placeholder"
 			variable email "placeholder@example.com"
 			variable homechan "#placeholder"
 		}
 		namespace eval dccts {
+			# dccts mode - 1 for enabled, 0 for disabled
 			variable mode "0"
 			variable reqflag "Df"
+			# dccts channels - set to "0" to disable a channel
 			variable chan1 "#chan1"
 			variable chan2 "#chan2"
 			variable chan3 "#chan3"
@@ -21,10 +26,13 @@ namespace eval bvzm {
 			variable chan5 "#chan5"
 		}
 		namespace eval weed {
-			variable packdefault "60"
+			variable packdefault "15"
 		}
-		namespace eval dir {
-			variable greet "gdata"
+		namespace eval greet {
+			if {![file exists $bvzm::settings::dir::greet]} {
+				file mkdir $bvzm::settings::dir::greet
+			}
+			variable dir "gdata"
 		}
 		namespace eval flags {
 			# you should remove this...

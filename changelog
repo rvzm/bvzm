@@ -6,6 +6,25 @@
 # or edited. Only additions will be
 # made to this file.
 
+V0.5 [0530]
+ - updated CONTACT information
+ - updated README.md
+ - + fixed typos
+ - + fixed eggdrop Version
+
+V0.5 [0420]
+ - cleaned up dccts some
+ - added text/motd
+ - added bvzm NickServ group via nick for controller
+ - removed most of the silly "weed package"
+ - cleaned up bvzm::main
+ - updated dccts and added public channel trigger for info of it
+ - cleaned up some
+ - added ability to disable dccts channels
+ - fixed greet system
+ - removed useless "word of the day" from bvzm:e
+ - expanded bvzm:pack error line
+
 v0.4.9
  - changed greet/dir settings back to pre-0.4.7
 
