@@ -31,7 +31,7 @@ Who     | Command    | Function
 --------|------------|----------
 friends | rollcall   | {requires bvzm chanflag}  lists all nicks in the channel for a Roll Call
 friends | uptime     | shows bots current uptime
-friends | addslap    | add an object to slap people with via the slap command
+
 ### bot op commands
 Command | Function
 --------|----------
