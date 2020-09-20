@@ -32,10 +32,22 @@ Who     | Command    | Function
 friends | rollcall   | {requires bvzm chanflag}  lists all nicks in the channel for a Roll Call
 friends | uptime     | shows bots current uptime
 
-### bot op commands
+### Controller command 'e'
 Command | Function
---------|----------
-e       | channel op commands - basic (de)op/voice and kick
+-----------|----------
+e          | channel op commands - basic (de)op/voice and kick
+-> op      | give op status to yourself or someone else
+-> deop    | remove op status from yourself or someone else
+-> voice   | give voice status to yourself or someone else
+-> devoice | remove voice status from yourself or someone else
+-> kick    | kick a user from the channel, reason optional
+-> remove  | politely inform a user to leave, after a setable time bvzm will kick them if they have not already left
+-> mode    | push a mode change to the channel
+-> invite  | invite a user to the channel
+-> topic   | change the channel topic
+-> mvoice  | initiate a mass voice
+-> help    | display help information about each command
+
 ### Master commands
 Command | Function
 --------|----------
