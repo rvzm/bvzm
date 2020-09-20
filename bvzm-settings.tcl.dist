@@ -25,8 +25,9 @@ namespace eval bvzm {
 			variable chan4 "#chan4"
 			variable chan5 "#chan5"
 		}
-		namespace eval weed {
+		namespace eval timers {
 			variable packdefault "15"
+			variable eremove "10"
 		}
 		namespace eval greet {
 			if {![file exists $bvzm::settings::dir::greet]} {

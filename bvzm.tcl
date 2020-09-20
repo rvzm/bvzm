@@ -146,11 +146,11 @@ namespace eval bvzm {
 				}
 			if {$cmd == "remove"} {
 				if {![onchan $msg $chan]} { putserv "PRIVMSG $chan :Error - $msg not on chan"; return }
-				putserv "PRIVMSG $chan :$msg - you have 10 seconds to leave, or you will be removed."
+				putserv "PRIVMSG $chan :$msg - you have ${bvzm::settings::timers::eremove} seconds to leave, or you will be removed."
 				global gchan knick
 				set gchan $chan
 				set knick $msg
-				utimer 10 bvzm::procs::e:kick $chan $nick
+				utimer ${bvzm::settings::timers::eremove} bvzm::procs::e:kick $chan $nick
 			}
 			if {$cmd == "mode"} { putserv "MODE $chan $msg"; return }
 			if {$cmd == "invite"} { putserv "PRIVMSG $chan :Alerting $msg to your invite...";  putserv "NOTICE $msg :You have been invited to $chan by $nick :)"; return }
