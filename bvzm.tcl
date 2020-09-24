@@ -401,11 +401,11 @@ namespace eval bvzm {
 					}
 					if {$v1 == "chanlist"} {
 						putdcc $idx "Channel List"
-						if {[dccts1] == "0"} { putdcc $idx "dccts channel 1 is disabled."; } else { putdcc $idx "Channel 1 - [dccts1]" }
-						if {[dccts2] == "0"} { putdcc $idx "dccts channel 2 is disabled."; } else { putdcc $idx "Channel 2 - [dccts2]" }
-						if {[dccts3] == "0"} { putdcc $idx "dccts channel 3 is disabled."; } else { putdcc $idx "Channel 3 - [dccts3]" }
-						if {[dccts4] == "0"} { putdcc $idx "dccts channel 4 is disabled."; } else { putdcc $idx "Channel 4 - [dccts4]" }
-						if {[dccts5] == "0"} { putdcc $idx "dccts channel 5 is disabled."; } else { putdcc $idx "Channel 5 - [dccts5]" }
+						if {[dccts1] == "0"} { putdcc $idx "Channel 1 - \[DISABLED\]"; } else { putdcc $idx "Channel 1 - [dccts1]" }
+						if {[dccts2] == "0"} { putdcc $idx "Channel 2 - \[DISABLED\]"; } else { putdcc $idx "Channel 2 - [dccts2]" }
+						if {[dccts3] == "0"} { putdcc $idx "Channel 3 - \[DISABLED\]"; } else { putdcc $idx "Channel 3 - [dccts3]" }
+						if {[dccts4] == "0"} { putdcc $idx "Channel 4 - \[DISABLED\]"; } else { putdcc $idx "Channel 4 - [dccts4]" }
+						if {[dccts5] == "0"} { putdcc $idx "Channel 5 - \[DISABLED\]"; } else { putdcc $idx "Channel 5 - [dccts5]" }
 						return
 					}
 				set v2 [string trim $text $v1]
