@@ -1,29 +1,40 @@
 namespace eval bvzm {
 	namespace eval settings {
-		variable version "0.5"
-		variable build "0420"
-		variable release "r1"
+		variable version "0.6.1"
+		variable dtsver "0.1.1"
+		variable build "1242"
+		variable release "dev"
 		variable debug "0"
 		namespace eval gen {
 			variable pubtrig "@"
 			variable controller "~bvzm"
 			variable nick "bvzm"
-			# NickServ nick group
+			variable homechan "#bvzm"
+		}
+		namespace eval nickserv {
+			# NickServ Settings
+			# gnick - nickname to be used for grouping
+			# gmethod - grouping method. using a 0-2 numerical digit
+			# 0 disabled, no grouping enabled. only bvzm-centered nickname registration
+			# 1 /ns group [gnick] [npass], group the bot into the groupnick
+			# 2 /ns id [gnick] [npass], identify to services using groupnick
 			variable gnick "placeholder"
-			variable npass "placeholder"
+			variable gmethod "0"
+			variable npass "examplepassword"
 			variable email "placeholder@example.com"
-			variable homechan "#placeholder"
 		}
 		namespace eval dccts {
-			# dccts mode - 1 for enabled, 0 for disabled
-			variable mode "0"
+			# Version tag for DCCTS is labeled as 'dtsver' under bvzm->settings
+			# To enable DCCTS, set mode to 1, or to disable use 0
+			# Set 'reqflag' to the flags you want to restric DCCTS users to, default is Df
+			# To set a channel, set the 'chan#' 1-4 as the channel name, or 0 to disable
+			variable mode "1"
 			variable reqflag "Df"
-			# dccts channels - set to "0" to disable a channel
-			variable chan1 "#chan1"
+			variable chan1 "#bvzm"
 			variable chan2 "#chan2"
 			variable chan3 "#chan3"
 			variable chan4 "#chan4"
-			variable chan5 "#chan5"
+			variable chan5 "0"
 		}
 		namespace eval timers {
 			variable packdefault "15"
