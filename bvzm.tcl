@@ -378,17 +378,29 @@ namespace eval bvzm {
 				putserv "PRIVMSG $chan :currently at version $bvzm::settings::dccts::version";
 				return;
 			}
-			if {$v1 == "ischan"} {
-				if {$chan == [dccts1]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 1"; return }
-				if {$chan == [dccts2]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 2"; return }
-				if {$chan == [dccts3]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 3"; return }
-				if {$chan == [dccts4]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 4"; return }
-				if {$chan == [dccts5]} { putserv "PRIVMSG $chan :This channel is set as dccts channel 5"; return }
-				putserv "PRIVMSG $chan :This channel is NOT a dccts channel";
+			if {$v1 == "check"} {
+				unset dch
+				if {$chan == [dccts1]} { set dch "1"; }
+				if {$chan == [dccts2]} { set dch "2"; }
+				if {$chan == [dccts3]} { set dch "3"; }
+				if {$chan == [dccts4]} { set dch "4"; }
+				if {$chan == [dccts5]} { set dch "5"; }
+				if {$dch => "0"} { putserv "PRIVMSG $chan :\[DCCTS\] This channel is #$dch"; return }
+				putserv "PRIVMSG $chan :\[DCCTS\] This channel is not in the system.";
 				return;
 			}
-			putserv "PRIVMSG $chan :\[dccts\] for info use 'dccts info' and for channel checking is 'dccts ischan'";
-			return;
+			if {$v1 == "send"} {
+				putlog "DCCTS-| $nick\(@chan\) -> $msg"
+				putserv "PRIVMSG $chan :\[DCCTS\] Message sent.";
+				return;
+			}
+			if {$v1 == "help"} {
+				putserv "PRIVMSG $chan :bvzm DCCTS:: bvzm version {$bvzm::settings::dccts::version}"
+				putserv "PRIVMSG $chan :- check | see where the channel sits in the system"
+				putserv "PRIVMSG $chan :- send  | send a message to the partyline"
+				putserv "PRIVMSG $chan :- info  | see info about DCCTS"
+			}
+			putserv "PRIVMSG $chan :\[DCCTS\] Error. please use 'dccts help'"
 		}
 		proc go {hand idx text} {
 			if {![matchattr $hand [reqflag]]} { putdcc $idx "You are not authorized to use dccts"; return}
