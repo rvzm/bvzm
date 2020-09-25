@@ -6,6 +6,17 @@
 # or edited. Only additions will be
 # made to this file.
 
+V0.6.1-dev [1242]
+ - moved nickserv settings to their own block, adding group method options [976a639]
+ - updated controller group command to reflect changes in settings [03642f7]
+ - updated DCCTS chanelist to use the same formatting for all channels listed [98bad1a]
+ - updated DCCTS channel check command, added server-side send, and added a help command [66e3f88]
+ - removed 'die' from settings dist file [04e5a16]
+
+V0.6-dev [0216]
+ - removed 'addslap' command from readme [92b1c0c]
+ - updated readme and script to use a user-defined time setting for 'e->remove' [8cfa10e]
+
 V0.5 [0530]
  - updated CONTACT information
  - updated README.md
