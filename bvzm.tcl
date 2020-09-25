@@ -207,8 +207,13 @@ namespace eval bvzm {
 			if {$v1 == "restart"} { restart; return }
 			if {$v1 == "die"} { die; return }
 			if {$v1 == "info"} { putserv "PRIVMSG $chan :bvzm.tcl running version [bvzm::util::getVersion]"; return }
+			### nickserv auth
 			if {$v1 == "register"} { putserv "PRIVMSG NickServ :REGISTER [bvzm::util::getPass] [bvzm::util::getEmail]"; return }
-			if {$v1 == "group"} { putserv "PRIVMSG NickServ :GROUP [bvzm::util::getGroupNick] [bvzm::util::getPass]"; return }
+			if {$v1 == "group"} {
+				if {[bvzm::util::getGroupMethod] == "0"} { putserv "PRIVMSG $chan :\[bvzm\] Error: NickServ Grouping disabled."; return }
+				if {[bvzm::util::getGroupMethod] == "1"} { putserv "PRIVMSG NickServ :GROUP [bvzm::util::getGroupNick] [bvzm::util::getPass]"; return }
+				if {[bvzm::util::getGroupMethod] == "2"} { putserv "PRIVMSG NickServ :IDENTIFY [bvzm::util::getGroupNick] [bvzm::util::petPass]"; return }
+				}
 			if {$v1 == "nsauth"} {
 				putserv "PRIVMSG NickServ :ID [bvzm::util::getPass]";
 				putserv "PRIVMSG $chan :Authed to NickServ";
@@ -334,20 +339,24 @@ namespace eval bvzm {
 			return $bvzm::settings::gen::pubtrig
 		}
 		proc getPass {} {
-			global bvzm::settings::gen::npass
-			return $bvzm::settings::gen::npass
+			global bvzm::settings::nickserv::npass
+			return $bvzm::settings::nickserv::npass
 		}
 		proc getEmail {} {
-			global bvzm::settings::gen::email
-			return $bvzm::settings::gen::email
+			global bvzm::settings::nickserv::email
+			return $bvzm::settings::nickserv::email
 		}
 		proc getGroupNick {} {
-			global bvzm::settings::gen:gnick
-			return $bvzm::settings::gen::gnick
+			global bvzm::settings::nickserv:gnick
+			return $bvzm::settings::nickserv::gnick
 		}
 		proc getGroupPass {} {
-			global bvzm::settings::gen::npass
-			return $bvzm::settings::gen::npass
+			global bvzm::settings::nickserv::npass
+			return $bvzm::settings::nickserv::npass
+		}
+		proc getGroupMethod {} {
+			global bvzm::settings::nickserv::gmethod
+			return $bvzm::settings::nickserv::gmethod
 		}
 		proc homechan {} {
 			global bvzm::settings::gen::homechan
