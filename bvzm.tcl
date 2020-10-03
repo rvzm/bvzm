@@ -69,6 +69,7 @@ namespace eval bvzm {
 				if {[matchattr $hand n] == "1"} { putserv "NOTICE $nick :As an owner, you can also use the '${bvzm::settings::gen::controller}' control command"; }
 			}
 		}
+		proc bvzm:help {nick uhost hand chan text} { putserv "PRIVMSG $chan :please use '${bvzm::settings::gen::pubtrig}bvzm help' for help."; return }
 		proc rollcall {nick uhost hand chan text} {
 			set rollcall [chanlist $chan]
 			putserv "PRIVMSG $chan :Roll Call!"
