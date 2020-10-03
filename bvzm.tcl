@@ -159,7 +159,7 @@ namespace eval bvzm {
 			if {$cmd == "kick"} { e:kick $chan $msg; return }
 			if {$cmd == "help"} {
 				if {$msg == ""} { puthelp "PRIVMSG $chan :For commands, use \'[bvzm::util::getTrigger]e help commands\'"; return }
-				if {$msg == "commands"} { puthelp "PRIVMSG $chan :Commands for bvzm e channel management system"; puthelp "PRIVMSG $chan :op deop voice devoice remove mode wotd invite topic mvoice"; puthelp "PRIVMSG $chan :For help with a command, use '[bvzm::util::getTrigger]e  help <command>'"; return }
+				if {$msg == "commands"} { puthelp "PRIVMSG $chan :Commands for bvzm e channel management system"; puthelp "PRIVMSG $chan :op deop voice devoice remove mode invite topic mvoice"; puthelp "PRIVMSG $chan :For help with a command, use '[bvzm::util::getTrigger]e  help <command>'"; return }
 				if {$msg == "op"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e op \[nick\] -  Op yourself or someone else"; return }
 				if {$msg == "deop"} { puthelp "PRIVMSG $chan :[bvzm:util::getTrigger]e deop \[nick\]  - deop yourself or someone else"; return }
 				if {$msg == "voice"} { puthelp "PRIVMSG $chan :[bvzm::util::getTrigger]e voice \[nick\] - voice yourself or someone else"; return }
