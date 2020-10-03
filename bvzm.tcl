@@ -91,7 +91,8 @@ namespace eval bvzm {
 		}
 		proc flagcheck {nick uhost hand chan text} {
 			if {[validuser $hand] == "0"} { putserv "PRIVMSG $chan :Error - you're not in my userfile. use [bvzm::util::getTrigger]regme to register"; return }
-			if {[matchattr $hand f] == "1"} { set chkf friend } else { set chkf normal }
+			if {[matchattr $hand f] == "1"} { set chkf friend } else { set chkf user }
+			if {[matchattr $hand D] == "1"} { set chkf $chkf,DCCTS }
 			if {[matchattr $hand o] == "1"} { set chkf $chkf,globop }
 			if {[matchattr $hand p] == "1"} { set chkf $chkf,partyline }
 			if {[matchattr $hand t] == "1"} { set chkf $chkf,botnet }
