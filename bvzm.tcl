@@ -19,7 +19,6 @@ namespace eval bvzm {
 		bind pub - ${bvzm::settings::gen::pubtrig}whoami bvzm::procs::whoami
 		bind pub - ${bvzm::settings::gen::pubtrig}version bvzm::procs::version
 		bind pub - ${bvzm::settings::gen::pubtrig}pack bvzm::weed::pack
-		bind pub - ${bvzm::settings::gen::pubtrig}weed bvzm::weed::info
 		# Friendly commands
 		bind pub f ${bvzm::settings::gen::pubtrig}rollcall bvzm::procs::rollcall
 		bind pub f ${bvzm::settings::gen::pubtrig}uptime bvzm::procs::uptime
