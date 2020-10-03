@@ -6,6 +6,15 @@
 # or edited. Only additions will be
 # made to this file.
 
+V0.6.1.2-dev [1208]
+ - removed 'wotd' from bvzm:e help output [8b70ce6]
+ - updated output for settings check [0dba0c1]
+ - added command 'help' directing users to use 'bvzm help' [8b80f5d]
+ - removed weed package leftover trigger [1794d2a]
+ - added DCCTS to flagcheck command [7b5f63a]
+ - fixed nsgroup method 2 typo [c9f6221]
+ - fixed 'pack' command timer reference [f58050e]
+
 V0.6.1-dev [1242]
  - moved nickserv settings to their own block, adding group method options [976a639]
  - updated controller group command to reflect changes in settings [03642f7]
