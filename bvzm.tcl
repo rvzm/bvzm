@@ -215,7 +215,7 @@ namespace eval bvzm {
 			if {$v1 == "group"} {
 				if {[bvzm::util::getGroupMethod] == "0"} { putserv "PRIVMSG $chan :\[bvzm\] Error: NickServ Grouping disabled."; return }
 				if {[bvzm::util::getGroupMethod] == "1"} { putserv "PRIVMSG NickServ :GROUP [bvzm::util::getGroupNick] [bvzm::util::getPass]"; return }
-				if {[bvzm::util::getGroupMethod] == "2"} { putserv "PRIVMSG NickServ :IDENTIFY [bvzm::util::getGroupNick] [bvzm::util::petPass]"; return }
+				if {[bvzm::util::getGroupMethod] == "2"} { putserv "PRIVMSG NickServ :IDENTIFY [bvzm::util::getGroupNick] [bvzm::util::getPass]"; return }
 				}
 			if {$v1 == "nsauth"} {
 				putserv "PRIVMSG NickServ :ID [bvzm::util::getPass]";
