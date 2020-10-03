@@ -278,7 +278,7 @@ namespace eval bvzm {
 							return
 						}
 					}
-				} else { set delay $bvzm::settings::weed::packdefault }
+				} else { set delay $bvzm::settings::timers::packdefault }
 				putserv "PRIVMSG $chan \00303Pack your \00309bowls\00303! Chan-wide \00315\002Toke\002\00306-\00315\002out\002\00303 in\00311 $delay \00303seconds!\003"
 				utimer $delay bvzm::weed::pack:go
 			}
