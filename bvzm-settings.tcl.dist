@@ -40,12 +40,6 @@ namespace eval bvzm {
 			variable packdefault "15"
 			variable eremove "10"
 		}
-		namespace eval greet {
-			if {![file exists $bvzm::settings::dir::greet]} {
-				file mkdir $bvzm::settings::dir::greet
-			}
-			variable dir "gdata"
-		}
 		namespace eval flags {
 			setudef flag bvzm
 			setudef flag avoice

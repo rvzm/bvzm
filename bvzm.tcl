@@ -13,7 +13,6 @@ namespace eval bvzm {
 		# Main Commands
 		bind pub - ${bvzm::settings::gen::pubtrig}bvzm bvzm::procs::bvzm:main
 		bind pub - ${bvzm::settings::gen::pubtrig}help bvzm::procs::bvzm:help
-		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::gtrig
 		bind pub - ${bvzm::settings::gen::pubtrig}regme bvzm::procs::register
 		bind pub - ${bvzm::settings::gen::pubtrig}fchk bvzm::procs::flagcheck
 		bind pub - ${bvzm::settings::gen::pubtrig}whoami bvzm::procs::whoami
@@ -33,7 +32,6 @@ namespace eval bvzm {
 		bind dcc - dccts bvzm::dccts::go
 		# Autos
 		bind join - * bvzm::procs::autovoice
-		bind join - * bvzm::greet::chantrigger
 	}
 	namespace eval procs {
 		# Main Command Procs
@@ -51,7 +49,6 @@ namespace eval bvzm {
 					return
 					}
 				if {$v2 == "regme"} { putserv "PRIVMSG $chan :command help for 'regme' - this command will register you into my userfile. this allows for extra flags, such as friend, chanop, ect."; return }
-				if {$v2 == "greet"} { putserv "PRIVMSG $chan :command help for 'greet' - options: set <greet> | set your greet"; return }
 				if {$v2 == "fchk"} { putserv "PRIVMSG $chan :command help for 'fchk' - check what flags you have, or if you are registered with me"; return }
 				if {$v2 == "rollcall"} { putserv "PRIVMSG $chan :command help for 'rollcall' - reqs: friend flag | does a roll call, listing all nicks in channel"; return }
 				if {$v2 == "uptime"} { putserv "PRIVMSG $chan :command help for 'uptime' - reqs: friend flag | displays my current uptime"; return }
@@ -63,7 +60,7 @@ namespace eval bvzm {
 			if {$v1 == "commands"} {
 				putserv "PRIVMSG $chan :bvzm commands | legend - \[flag\]command";
 				putserv "PRIVMSG $chan :flags: - anyone, f friend, o chanop, m master"
-				putserv "PRIVMSG $chan :\[-\]regme \[-\]greet \[-\]fchk \[-\]whoami \[f\]uptime"
+				putserv "PRIVMSG $chan :\[-\]regme \[-\]fchk \[-\]whoami \[f\]uptime"
 				putserv "PRIVMSG $chan :\[-\]version \[-\]pack \[f\]rollcall \[-\]bvzm \[m\]e"
 				if {[matchattr $hand n] == "1"} { putserv "NOTICE $nick :As an owner, you can also use the '${bvzm::settings::gen::controller}' control command"; }
 			}
@@ -232,35 +229,6 @@ namespace eval bvzm {
 			}
 		}
 	}
-		# Greet System
-	namespace eval greet {
-		proc gtrig {nick uhost hand chan text} {
-			if {$bvzm::settings::debug == "1"} { putlog "bvzm-debug\: greet command triggered" }
-			set v1 [lindex [split $text] 0]
-			set txt [split $text]
-			set msg [lrange $txt 1 end]
-			set gdb "[bvzm::util::greetdir]/$nick"
-			if {$v1 == "set"} {
-				if {$msg == ""} { putserv "PRIVMSG $chan :error - greet message cannot be empty"; return }
-				bvzm::util::write_db $gdb $msg
-				putserv "PRIVMSG $chan :Greet for $nick set";
-			}
-			if {$v1 == "remove"} {
-				set gdb "[bvzm::util::greetdir]/$nick"
-				set act [exec rm $gdb]
-				if {[catch $act err]} { putserv "PRIVMSG $chan :error - removal failed"; return }
-				putserv "PRIVMSG $chan :greet for $nick removed"
-				return
-			}
-		}
-		proc chantrigger {nick uhost hand chan} {
-			if {$bvzm::settings::debug == "1"} { putlog "bvzm-debug\: greet join triggered on $chan" }
-			if {![channel get $chan greet]} { return }
-			if {![onchan $nick $chan]} { return }
-			set file "[bvzm::util::greetdir]/$nick"
-			if {[file exists $file]} { putserv "PRIVMSG $chan :\[$nick\] - [bvzm::util::read_db $file]"}
-		}
-	}
 	namespace eval weed {
 		proc pack {nick uhost hand chan text} {
 				global wchan
@@ -364,10 +332,6 @@ namespace eval bvzm {
 		proc homechan {} {
 			global bvzm::settings::gen::homechan
 			return $bvzm::settings::gen::homechan
-		}
-		proc greetdir {} {
-			global bvzm::settings::greet::dir
-			return $bvzm::settings::greet::dir
 		}
 		proc act {chan text} { putserv "PRIVMSG $chan \01ACTION $text\01"; }
 	}
