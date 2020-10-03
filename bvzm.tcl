@@ -4,13 +4,15 @@
 # ### ------------------------- ####################  ### DEV EDITION ###
 # ### Version: 0.6              ####################  ###################
 # ##################################################
+putlog "bvzm:: Loading..."
 if {[catch {source scripts/bvzm/bvzm-settings.tcl} err]} {
-	putlog "Error: Could not load 'scripts/bvzm/bvzm-settings.tcl' file.";
+	putlog "bvzm:: Error loading settings."
 }
 namespace eval bvzm {
 	namespace eval binds {
 		# Main Commands
 		bind pub - ${bvzm::settings::gen::pubtrig}bvzm bvzm::procs::bvzm:main
+		bind pub - ${bvzm::settings::gen::pubtrig}help bvzm::procs::bvzm:help
 		bind pub - ${bvzm::settings::gen::pubtrig}greet bvzm::greet::gtrig
 		bind pub - ${bvzm::settings::gen::pubtrig}regme bvzm::procs::register
 		bind pub - ${bvzm::settings::gen::pubtrig}fchk bvzm::procs::flagcheck
