@@ -1,4 +1,4 @@
-# bvzm.tcl \- version 0.5
+# bvzm.tcl \- version 0.6.1 rc1
 
 
 ## Basic Information
