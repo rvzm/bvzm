@@ -6,6 +6,10 @@
 # or edited. Only additions will be
 # made to this file.
 
+V0.6.1 rc1
+ - removed broken greet system [76b7c45]
+ - updated contact info [e19e513]
+
 V0.6.1.2-dev [1208]
  - removed 'wotd' from bvzm:e help output [8b70ce6]
  - updated output for settings check [0dba0c1]
