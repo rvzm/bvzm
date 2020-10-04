@@ -5,9 +5,6 @@
 This script is ran and tested with [eggdrop](http://eggheads.org) 1.8.4
 Currently requires no extra packages to be installed.
 
-## 'text' Directory
-This folder contains a modified motd for bvzm to use.
-
 ## Install
 to install bvzm.tcl, clone it to your scripts/ folder, then copy bvzm-settings.tcl.dist to bvzm-settings.tcl and edit to your liking.
 
