@@ -425,6 +425,8 @@ namespace eval bvzm {
 			global bvzm::settings::dccts::chan5
 			return $bvzm::settings::dccts::chan5
 		}
+		proc sym:rekt {nick uhost hand chan text} { return "\[\u2714\] rekt"; }
+		proc sym:check {text} { return "\[\u2714\] $text"; }
 	}
 	putlog "bvzm.tcl version $bvzm::settings::version -- LOADED"
 }
