@@ -15,7 +15,6 @@ The command character is defined by settings->gen->pubtrig
 Who     | Command          | Function
 --------|------------------|----------
 anyone  | regme            | Registers a user into the userfile, if they aren't already in it.
-anyone  | greet            | using 'greet set' will set your greet - does not require user to be in userfile.
 anyone  | bvzm             | this command by itself shows an error message
 anyone  | fchk             | check your flags with the bot
 anyone  | whoami           | see your nick, userhost, and handle as seen by the bot
@@ -83,7 +82,6 @@ dccts    | dccts     | DCC-To-Server - Send messages to predefined channels from
 Flag    | Name         | Function
 --------|--------------|----------
 avoice  | Autovoice    | Automatically voice users on join
-greet   | AutoGreet    | Sends a user-defined message to the channel on join
 
 ## Settings
 All settings for bvzm.tcl are located in bvzm-settings.tcl
@@ -109,4 +107,4 @@ chan4      | dccts channel 4
 chan5      | dccts channel 5
 
 ## Contact
-I can be contacted at irc.gotham.chat in #bvzm, #eggdrop, and #gotham
+I can be contacted at irc.irc-nerds.net in #fuknz, #bots, and #nerds
