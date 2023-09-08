@@ -43,7 +43,6 @@ namespace eval bvzm {
 		namespace eval flags {
 			setudef flag bvzm
 			setudef flag avoice
-			setudef flag greet
 		}
 	}
 }
