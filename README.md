@@ -20,13 +20,10 @@ anyone  | fchk             | check your flags with the bot
 anyone  | whoami           | see your nick, userhost, and handle as seen by the bot
 anyone  | version          | full version reply
 anyone  | dccts            | show info about dccts
-anyone  | pack             | tells the bot to prepare the channel for a "chan-wide toke-out"
-
-### friend commands
-Who     | Command    | Function
---------|------------|----------
-friends | rollcall   | {requires bvzm chanflag}  lists all nicks in the channel for a Roll Call
-friends | uptime     | shows bots current uptime
+anyone  | pack             | tells the bot to prepare the channel for a "chan-wide toke-out"
+--------|------------------|----------
+friends | rollcall.        | {requires bvzm chanflag}  lists all nicks in the channel for a Roll Call
+friends | uptime           | shows bots current uptime
 
 ### Controller command 'e'
 Command | Function
